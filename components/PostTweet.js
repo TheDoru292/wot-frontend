@@ -11,7 +11,7 @@ export default function PostTweet({
   setGifId,
 }) {
   const [tweetContent, setTweetContent] = useState("");
-  const [gif, setGif] = useState({});
+  const [gif, setGif] = useState(null);
   const { userInfo } = useSelector((state) => state.auth);
 
   const gf = new GiphyFetch("AkO9AeIcPXbtD5m61zBn0IFSqCBxuk8M");
@@ -52,9 +52,9 @@ export default function PostTweet({
         following: false,
         liked: false,
         retweeted: false,
-        comments: { count: 0 },
-        likes: { count: 0 },
-        retweets: { count: 0 },
+        comments: 0,
+        likes: 0,
+        retweets: 0,
       };
 
       changeArray(obj);
@@ -80,7 +80,7 @@ export default function PostTweet({
           value={tweetContent}
           onChange={(e) => setTweetContent(e.target.value)}
         />
-        {gif.images ? (
+        {gif && gif.images ? (
           <div className="relative pb-2">
             <button
               style={{
@@ -89,7 +89,7 @@ export default function PostTweet({
               }}
               onClick={() => {
                 setGifId(null);
-                setGif({});
+                setGif(null);
               }}
               className="absolute mt-2 ml-2 p-1 hover:bg-white cursor-pointer bg-black rounded-full"
             >
@@ -107,9 +107,13 @@ export default function PostTweet({
           <div className="flex flex-grow gap-2">
             <p>Image</p>
             <Gif
-              className="w-8 h-8 cursor-pointer"
-              onClick={() => setGifMenu(true)}
-              stroke="#38bdf8"
+              className={!gif ? "w-8 h-8 cursor-pointer" : "w-8 h-8"}
+              onClick={() => {
+                if (!gif) {
+                  setGifMenu(true);
+                }
+              }}
+              stroke={!gif ? "#38bdf8" : "#2786b0"}
             />
             <p>Poll</p>
             <p>Location</p>
