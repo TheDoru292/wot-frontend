@@ -8,16 +8,24 @@ import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { unfollow, follow } from "@/lib/actions";
+import EditProfile from "@/components/EditProfile";
+import Checkmark from "@/components/Icons/Checkmark";
 
 const backendURL = "http://localhost:3000";
 
 export default function UserProfile({ user }) {
   const [tweets, setTweets] = useState([]);
-  const [pageDetails, setPageDetails] = useState({});
+  const [tweetPageDetails, setTweetPageDetails] = useState({});
+  const [replies, setReplies] = useState([]);
+  const [replyPageDetails, setRepliesPageDetails] = useState({});
+  const [likes, setLikes] = useState([]);
+  const [likePageDetails, setLikePageDetails] = useState({});
   const [following, setFollowing] = useState(user.reqUserFollowing);
   const [followers, setFollowers] = useState(user.followers);
   const [followingHover, setFollowingHover] = useState(false);
   const [openUnfollow, setOpenUnfollow] = useState(false);
+  const [openEditProfile, setOpenEditProfile] = useState(false);
+  const [selected, setSelected] = useState("tweets");
 
   const { userInfo } = useSelector((state) => state.auth);
 
@@ -36,7 +44,7 @@ export default function UserProfile({ user }) {
       ).then((res) => res.json());
 
       setTweets(data.tweets);
-      setPageDetails(data.pages);
+      setTweetPageDetails(data.pages);
     }
 
     getTweets();
@@ -58,9 +66,47 @@ export default function UserProfile({ user }) {
     ).then((res) => res.json());
 
     setTweets([...tweets, ...fetchedTweets.tweets]);
-    setPageDetails(fetchedTweets.pages);
+    setTweetPageDetails(fetchedTweets.pages);
 
     console.log(pageDetails);
+  }
+
+  async function fetchComments() {
+    const token = localStorage.getItem("token");
+
+    const fetchedComments = await fetch(
+      `${backendURL}/api/user/${user.user.handle}/comments?page=${
+        replyPageDetails.nextPage || 1
+      }`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    ).then((res) => res.json());
+
+    setReplies([...replies, ...fetchedComments.comments]);
+    setRepliesPageDetails(fetchedComments.pages);
+  }
+
+  async function fetchLikedTweets() {
+    const token = localStorage.getItem("token");
+
+    const data = await fetch(
+      `${backendURL}/api/user/${user.user.handle}/tweets/liked`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    ).then((res) => res.json());
+
+    if (data.success) {
+      setLikes([...likes, ...data.tweets]);
+      setRepliesPageDetails(data.pages);
+    }
   }
 
   async function handleFollow() {
@@ -91,6 +137,17 @@ export default function UserProfile({ user }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <LeftSidebar />
+      {openEditProfile && userInfo == true ? (
+        <EditProfile
+          userInfo={userInfo}
+          close={() => {
+            setOpenEditProfile(false);
+            document.querySelector("body").classList.toggle("overflow-hidden");
+          }}
+        />
+      ) : (
+        <></>
+      )}
       {openUnfollow == true ? (
         <div className="fixed top-0 left-0 w-screen h-screen z-[1000]">
           <div
@@ -128,7 +185,7 @@ export default function UserProfile({ user }) {
       ) : (
         <></>
       )}
-      <main className="flex flex-grow">
+      <main className="flex max-w-[575px] flex-grow flex-col">
         <main className="flex flex-grow flex-col">
           <div
             style={{ backgroundColor: "rgba(0,0,0,0.65)", zIndex: "100" }}
@@ -144,17 +201,46 @@ export default function UserProfile({ user }) {
               </div>
             </Link>
             <div className="flex flex-col">
-              <h2 className="leading-6 text-lg font-bold">
-                {user.user.username}
-              </h2>
-              <p className="text-sm text-secondary">{user.tweets} Tweets</p>
+              <div className="flex gap-1 items-center">
+                <h2 className="leading-6 text-lg font-bold">
+                  {user.user.username}
+                </h2>
+                {user.user.verifiedCheckmark ? (
+                  <Checkmark className="w-[17px] h-[17px]" />
+                ) : (
+                  <></>
+                )}
+              </div>
+              {selected == "tweets" ? (
+                tweets.length != 1 ? (
+                  <p className="text-sm text-secondary">{user.tweets} Tweets</p>
+                ) : (
+                  <p className="text-sm text-secondary">{user.tweets} Tweet</p>
+                )
+              ) : selected == "comments" ? (
+                replies.length != 1 ? (
+                  <p className="text-sm text-secondary">
+                    {user.replies} Replies
+                  </p>
+                ) : (
+                  <p className="text-sm text-secondary">{user.replies} Reply</p>
+                )
+              ) : selected == "likes" ? (
+                likes.length != 1 ? (
+                  <p className="text-sm text-secondary">{user.likes} Likes</p>
+                ) : (
+                  <p className="text-sm text-secondary">{user.likes} Like</p>
+                )
+              ) : (
+                <p>Error</p>
+              )}
             </div>
           </div>
           <div className="flex flex-col border-b border-gray-700/75">
             <div className="bg-stone-700 w-full h-[200px]">
               <img
                 style={{ objectFit: "cover", objectPosition: "25% 25%" }}
-                src="https://4kwallpapers.com/images/wallpapers/anime-girl-3840x2160-10025.jpg"
+                src={user.user.cover_url}
                 alt="cover"
                 className="w-full h-full overflow-hidden"
               />
@@ -167,9 +253,17 @@ export default function UserProfile({ user }) {
                 className="bg-red-400 h-[133px] w-[133px] rounded-full absolute top-[182px] ml-5 border-4 border-black"
               ></img>
             </div>
-            <div className="px-4 pt-3 flex self-end h-[80px]">
-              {user.user._id == userInfo._id ? (
-                <button className="font-bold h-9 px-3 border border-secondary rounded-full">
+            <div className="px-4 pt-3 flex self-end h-[78px]">
+              {userInfo && user.user._id == userInfo._id ? (
+                <button
+                  onClick={() => {
+                    setOpenEditProfile(true);
+                    document
+                      .querySelector("body")
+                      .classList.toggle("overflow-hidden");
+                  }}
+                  className="font-bold h-9 px-3 border border-secondary rounded-full"
+                >
                   Edit profile
                 </button>
               ) : following == true ? (
@@ -196,10 +290,20 @@ export default function UserProfile({ user }) {
             </div>
             <div className="flex flex-col gap-2 px-4 mb-4">
               <div>
-                <p className="leading-5 font-bold text-lg">
-                  {user.user.username}
-                </p>
+                <div className="flex gap-1 items-center">
+                  <p className="leading-5 font-bold text-lg">
+                    {user.user.username}
+                  </p>
+                  {user.user.verifiedCheckmark ? (
+                    <Checkmark className="w-[17px] h-[17px] mt-[2px]" />
+                  ) : (
+                    <></>
+                  )}
+                </div>
                 <p className="text-secondary">@{user.user.handle}</p>
+              </div>
+              <div>
+                <p>{user.user.bio}</p>
               </div>
               <div>
                 <p className="text-secondary">
@@ -208,44 +312,133 @@ export default function UserProfile({ user }) {
                 </p>
               </div>
               <div className="flex gap-5">
-                <p className="text-sm text-secondary">
-                  <span className="text-white font-bold">
-                    {user.following}{" "}
-                  </span>
-                  Following
-                </p>
-                <p className="text-sm text-secondary">
-                  <span className="text-white font-bold">{followers} </span>
-                  Follower
-                </p>
+                <Link href={`/user/${user.user.handle}/following`}>
+                  <p className="text-sm text-secondary">
+                    <span className="text-white font-bold">
+                      {user.following}{" "}
+                    </span>
+                    Following
+                  </p>
+                </Link>
+                <Link href={`/user/${user.user.handle}/followers`}>
+                  <p className="text-sm text-secondary">
+                    <span className="text-white font-bold">{followers} </span>
+                    Follower
+                  </p>
+                </Link>
               </div>
             </div>
             <div className="flex">
-              <div className="justify-center hover:bg-zinc-800/75 flex font-bold self-start h-full flex-grow flex-basis">
-                <div>
-                  <p className="py-[13.2px]">Tweets</p>
-                  <div className="h-[4.5px] w-[52px] rounded-full bg-sky-400"></div>
-                </div>
+              <div className="cursor-pointer justify-center hover:bg-zinc-800/75 flex font-bold self-start h-full flex-grow flex-basis">
+                {selected == "tweets" ? (
+                  <div>
+                    <p className="py-[13.2px]">Tweets</p>
+                    <div className="h-[4.5px] w-[52px] rounded-full bg-sky-400"></div>
+                  </div>
+                ) : (
+                  <div
+                    onClick={() => setSelected("tweets")}
+                    className="w-full flex self-center justify-center"
+                  >
+                    <p className="text-secondary py-4">Tweets</p>
+                  </div>
+                )}
               </div>
-              <div className=" text-secondary font-bold hover:bg-zinc-800/75 flex justify-center flex-grow flex-basis">
-                <p className="py-4">Comments</p>
+              <div className="cursor-pointer font-bold hover:bg-zinc-800/75 flex justify-center flex-grow flex-basis">
+                {selected == "comments" ? (
+                  <div>
+                    <p className="py-[13.2px]">Replies</p>
+                    <div className="h-[4.5px] w-[52px] rounded-full bg-sky-400"></div>
+                  </div>
+                ) : (
+                  <div
+                    className="w-full flex self-center justify-center"
+                    onClick={() => {
+                      setSelected("comments");
+                      if (replies.length == 0) {
+                        fetchComments();
+                      }
+                    }}
+                  >
+                    <p className="text-secondary py-4">Replies</p>
+                  </div>
+                )}
               </div>
-              <div className=" text-secondary font-bold hover:bg-zinc-800/75 flex justify-center flex-grow flex-basis">
-                <p className="py-4">Likes</p>
+              <div className="cursor-pointer font-bold hover:bg-zinc-800/75 flex justify-center flex-grow flex-basis">
+                {selected == "likes" ? (
+                  <div>
+                    <p className="py-[13.2px]">Likes</p>
+                    <div className="h-[4.5px] w-[39px] rounded-full bg-sky-400"></div>
+                  </div>
+                ) : (
+                  <div
+                    className="w-full flex self-center justify-center"
+                    onClick={() => {
+                      setSelected("likes");
+                      if (likes.length == 0) {
+                        fetchLikedTweets();
+                      }
+                    }}
+                  >
+                    <p className="text-secondary py-4">Likes</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
-          {tweets.map((item) => {
-            return <Tweet key={item._id} tweet={item.tweet} rest={item} />;
-          })}
-          {pageDetails.hasNextPage == true ? (
+          {selected == "tweets" ? (
+            tweets.map((item) => {
+              return <Tweet key={item._id} tweet={item.tweet} rest={item} />;
+            })
+          ) : (
+            <></>
+          )}
+          {selected == "comments" ? (
+            replies.map((item) => {
+              return (
+                <>
+                  <Tweet
+                    tweet={item.tweet}
+                    rest={item.tweetStats}
+                    bar={true}
+                    reply={false}
+                  />
+                  <Tweet
+                    tweet={item.comment}
+                    rest={item.commentStats}
+                    reply={true}
+                  />
+                </>
+              );
+            })
+          ) : (
+            <></>
+          )}
+          {selected == "likes" ? (
+            likes.map((item) => {
+              return <Tweet tweet={item.tweet} rest={item} />;
+            })
+          ) : (
+            <></>
+          )}
+          {tweetPageDetails.hasNextPage && selected == "tweets" ? (
             <p onClick={showMoreTweets}>Show more</p>
           ) : (
             <></>
           )}
+          {replyPageDetails.hasNextPage && selected == "comments" ? (
+            <p onClick={fetchComments}>Show more</p>
+          ) : (
+            <></>
+          )}
+          {likePageDetails.hasNextPage && selected == "likes" ? (
+            <p onClick={fetchLikedTweets}>Show more</p>
+          ) : (
+            <></>
+          )}
         </main>
-        <RightSidebar />
       </main>
+      <RightSidebar />
     </div>
   );
 }
