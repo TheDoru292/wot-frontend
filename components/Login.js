@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 
 export default function Login({ close, register }) {
-  const [username, setUsername] = useState("");
+  const [handle, setHandle] = useState("");
   const [password, setPassword] = useState("");
 
   const { userInfo, userToken, error } = useSelector((state) => state.auth);
@@ -22,7 +22,7 @@ export default function Login({ close, register }) {
   function login(e) {
     e.preventDefault();
 
-    dispatch(userLogin({ username, password }));
+    dispatch(userLogin({ handle, password }));
   }
 
   return (
@@ -65,9 +65,9 @@ export default function Login({ close, register }) {
             <div>
               <input
                 type="text"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Handle"
+                value={handle}
+                onChange={(e) => setHandle(e.target.value)}
                 className="bg-inherit rounded-sm placeholder:text-secondary border border-secondary/50 w-full h-10 p-2"
               />
             </div>
@@ -84,7 +84,7 @@ export default function Login({ close, register }) {
           <div className="mb-12">
             <button
               onClick={login}
-              disabled={username != "" && password != "" ? false : true}
+              disabled={handle != "" && password != "" ? false : true}
               className="py-[6.5px] bg-white w-full font-bold text-black rounded-full disabled:bg-white/75"
             >
               Log in
