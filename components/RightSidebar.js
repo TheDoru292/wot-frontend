@@ -1,17 +1,13 @@
-import { getRightSidebarTags } from "@/lib/actions";
+import { getRightSidebarTags, getRightSidebarUsers } from "@/lib/actions";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import store from "../redux/store";
-
-const whoToFollow = [
-  { _id: 59, username: "TheDoru", handle: "@thedoru", profile_picture_url: "" },
-  { _id: 32, username: "Testing", handle: "@test" },
-  { _id: 1, username: "Sei", handle: "@seiryuu" },
-];
+import Link from "next/link";
+import RsUser from "./RsUser";
 
 export default function RightSidebar({ openCreateAccount }) {
   const [tags, setTags] = useState([]);
+  const [users, setUsers] = useState([]);
   const router = useRouter();
   const { userInfo } = useSelector((state) => state.auth);
   const sidebar = useRef(null);
@@ -23,7 +19,16 @@ export default function RightSidebar({ openCreateAccount }) {
       setTags(data.tags);
     }
 
-    console.log(tags);
+    async function getUsers() {
+      const data = await getRightSidebarUsers(userInfo.handle);
+
+      console.log(data);
+      setUsers(data.users);
+    }
+
+    if (userInfo) {
+      getUsers();
+    }
 
     getTags();
   }, []);
@@ -51,7 +56,7 @@ export default function RightSidebar({ openCreateAccount }) {
   return (
     <div className="overflow-hidden min-h-screen flex w-[540px] pt-2 border-l border-gray-700/75">
       <div ref={sidebar} className="flex gap-4 flex-col ml-6 w-[360px]">
-        {router.pathname == "/explore" ? (
+        {router.pathname == "/explore" || router.pathname == "/search" ? (
           <></>
         ) : (
           <input
@@ -66,7 +71,7 @@ export default function RightSidebar({ openCreateAccount }) {
           <></>
         ) : (
           <>
-            <div className="flex flex-col pt-2 bg-secondary-bg rounded-xl">
+            <div className="flex flex-col pt-2 bg-[#16181c] rounded-xl">
               <h2 className="px-4 pb-2 text-lg font-bold">Trending</h2>
               {tags.map((item) => {
                 return (
@@ -81,36 +86,31 @@ export default function RightSidebar({ openCreateAccount }) {
                   </div>
                 );
               })}
-              <p className="px-4 py-2 pb-4 rounded-b-xl text-sky-400 hover:bg-zinc-800/50">
-                Show more
-              </p>
+              <Link href="/trends">
+                <p className="px-4 py-2 pb-4 rounded-b-xl text-sky-400 hover:bg-zinc-800/50">
+                  Show more
+                </p>
+              </Link>
             </div>
           </>
         )}
-        {userInfo ? (
-          <div className="flex flex-col pt-2 bg-secondary-bg rounded-xl">
+        {router.pathname == "/connect_people" || !userInfo ? (
+          <></>
+        ) : (
+          <div className="flex flex-col pt-2 bg-[#16181c] rounded-xl">
             <h2 className="px-4 pb-2 text-lg font-bold">Who to follow</h2>
-            {whoToFollow.map((item) => {
-              return (
-                <div
-                  key={item._id}
-                  className="items-center gap-3 flex px-4 py-3 hover:bg-zinc-800/50"
-                >
-                  <div className="w-12 h-12 bg-red-400 rounded-full"></div>
-                  <div className="flex-grow">
-                    <p>{item.username}</p>
-                    <p className="text-secondary">{item.handle}</p>
-                  </div>
-                  <p className="bg-white hover:bg-white/75 text-black font-bold py-1 px-3 rounded-full">
-                    Follow
-                  </p>
-                </div>
-              );
+            {users.map((item) => {
+              return <RsUser user={item} />;
             })}
-            <p className="px-4 py-2 pb-4 rounded-b-xl text-sky-400 hover:bg-zinc-800/50">
-              Show more
-            </p>
+            <Link href="/connect_people">
+              <p className="px-4 py-2 pb-4 rounded-b-xl text-sky-400 hover:bg-zinc-800/50">
+                Show more
+              </p>
+            </Link>
           </div>
+        )}
+        {userInfo ? (
+          <></>
         ) : (
           <div className="flex flex-col p-3 rounded-xl border border-gray-700/75">
             <p className="font-bold text-lg">Let's use Wot!</p>
