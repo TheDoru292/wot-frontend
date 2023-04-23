@@ -11,8 +11,8 @@ import { deleteComment } from "@/lib/actions";
 const backendURL = "http://localhost:3000";
 
 export default function CommentComp({ comment }) {
-  const [liked, setLiked] = useState(false);
-  const [likes, setLikes] = useState(0);
+  const [liked, setLiked] = useState(comment.like);
+  const [likes, setLikes] = useState(comment.likes.count);
   const [retweets, setRetweets] = useState(0);
   const [retweeted, setRetweeted] = useState(false);
 
@@ -20,7 +20,7 @@ export default function CommentComp({ comment }) {
     const token = localStorage.getItem("token");
 
     const data = await fetch(
-      `${backendURL}/api/tweet/${comment.tweet}/comment/${comment._id}/like`,
+      `${backendURL}/api/tweet/${comment.comment.tweet}/comment/${comment.comment._id}/like`,
       {
         method: "POST",
         headers: {
@@ -48,11 +48,11 @@ export default function CommentComp({ comment }) {
   return (
     <div className="hover:bg-gray-200/5 border-b border-gray-700/75 w-full px-4 pt-3 pb-2 flex gap-3">
       <Link
-        href={`/user/${comment?.user.handle}`}
+        href={`/user/${comment.comment.user.handle}`}
         className="w-[58px] h-[52px]"
       >
         <img
-          src={comment.user.profile_picture_url
+          src={comment.comment.user.profile_picture_url
             .replace(`"`, "")
             .replace(",", "")}
           alt="pfp"
@@ -62,17 +62,17 @@ export default function CommentComp({ comment }) {
       <div className="w-full flex flex-col">
         <div className="flex gap-1">
           <Link
-            href={`/user/${comment?.user.handle}`}
+            href={`/user/${comment.comment.user.handle}`}
             className="hover:underline"
           >
-            <p className="font-bold">{comment.user.username}</p>
+            <p className="font-bold">{comment.comment.user.username}</p>
           </Link>
-          <Link href={`/user/${comment?.user.handle}`}>
-            <p className="text-secondary">@{comment.user.handle}</p>
+          <Link href={`/user/${comment.comment.user.handle}`}>
+            <p className="text-secondary">@{comment.comment.user.handle}</p>
           </Link>
           <span className="text-secondary">·</span>
           <p className="text-secondary flex-grow">
-            {format(new Date(comment.posted_on), "MMM dd")}
+            {format(new Date(comment.comment.posted_on), "MMM dd")}
           </p>
           <Image
             alt="menu"
@@ -87,7 +87,7 @@ export default function CommentComp({ comment }) {
             fontFamily: `ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"`,
           }}
         >
-          {comment.content}
+          {comment.comment.content}
         </pre>
         <div className="mt-3 flex">
           <div className="text-secondary hover:text-[#1d9bf0] flex-grow flex-basis flex gap-4">
@@ -100,9 +100,7 @@ export default function CommentComp({ comment }) {
               className="h-7 w-7 rounded-full"
               fill="#71767b"
             />
-            <p className={retweeted == true ? "text-[#00ba7c]" : ""}>
-              {retweets}
-            </p>
+            <p className={""}>{0}</p>
           </div>
           <div
             onClick={like}
