@@ -23,6 +23,7 @@ export default function Search() {
   useEffect(() => {
     if (router.query.q) {
       setSearch(router.query.q);
+      searchFunc();
     }
   }, []);
 
