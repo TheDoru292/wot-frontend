@@ -16,20 +16,27 @@ import Retweet from "./Icons/Retweet";
 import Comment from "./Icons/Comment";
 import { useSelector } from "react-redux";
 import { deleteTweet } from "@/lib/actions";
+import Checkmark from "./Icons/Checkmark";
+import uniqid from "uniqid";
 
 const backendURL = "http://localhost:3000";
 
-export default function Tweet({ tweet, rest, removeTweet }) {
+export default function Tweet({
+  tweet,
+  rest,
+  removeTweet,
+  bar,
+  reply = false,
+}) {
   const [openMenu, setOpenMenu] = useState(false);
-  const [bookmarked, setBookmarked] = useState(rest.bookmarked);
-  const [likes, setLikes] = useState(rest.likes.count);
-  const [liked, setLiked] = useState(rest.liked);
+  const [bookmarked, setBookmarked] = useState(rest.bookmarked || false);
+  const [likes, setLikes] = useState(rest.likes);
+  const [liked, setLiked] = useState(rest.liked || false);
   const [tweetContent, setTweetContent] = useState([]);
-  const [retweets, setRetweets] = useState(rest.retweets.count);
-  const [retweeted, setRetweeted] = useState(rest.retweeted);
+  const [retweets, setRetweets] = useState(rest.retweets || 0);
+  const [retweeted, setRetweeted] = useState(rest.retweeted || false);
   const [openTweetMenu, setOpenTweetMenu] = useState(false);
   const [following, setFollowing] = useState(rest.following);
-  const [tags, setTags] = useState([]);
 
   const { userInfo } = useSelector((state) => state.auth);
 
@@ -41,8 +48,6 @@ export default function Tweet({ tweet, rest, removeTweet }) {
 
   useEffect(() => {
     handleTweet();
-
-    console.log(tags);
   }, []);
 
   function handleTweet() {
@@ -58,8 +63,6 @@ export default function Tweet({ tweet, rest, removeTweet }) {
       })
     );
   }
-
-  console.log(tweetContent);
 
   function closeOpenMenu(e) {
     if (
@@ -79,7 +82,9 @@ export default function Tweet({ tweet, rest, removeTweet }) {
     }
 
     if (tweetRef.current && tweetRef.current.contains(e.target)) {
-      router.push(`/user/${tweet.user.handle}/status/${tweet._id}`);
+      if (!reply) {
+        router.push(`/user/${tweet.user.handle}/status/${tweet._id}`);
+      }
     }
   }
 
@@ -92,20 +97,24 @@ export default function Tweet({ tweet, rest, removeTweet }) {
   }
 
   async function addBookmark() {
-    const data = await bookmark(tweet._id);
+    if (!reply) {
+      const data = await bookmark(tweet._id);
 
-    if (data.success == true) {
-      setBookmarked(true);
-      setOpenMenu(false);
+      if (data.success == true) {
+        setBookmarked(true);
+        setOpenMenu(false);
+      }
     }
   }
 
   async function removeBookmarkA() {
-    const data = await removeBookmark(tweet._id);
+    if (!reply) {
+      const data = await removeBookmark(tweet._id);
 
-    if (data.success == true) {
-      setBookmarked(false);
-      setOpenMenu(false);
+      if (data.success == true) {
+        setBookmarked(false);
+        setOpenMenu(false);
+      }
     }
   }
 
@@ -113,33 +122,63 @@ export default function Tweet({ tweet, rest, removeTweet }) {
     e.stopPropagation();
     e.preventDefault();
 
-    const data = await like(tweet._id);
+    if (!reply && userInfo) {
+      const data = await like(tweet._id);
 
-    if (data.success == true && data.status == "Tweet liked.") {
-      setLiked(true);
-      setLikes((count) => count + 1);
+      if (data.success == true && data.status == "Tweet liked.") {
+        setLiked(true);
+        setLikes((count) => count + 1);
+      } else {
+        setLiked(false);
+        setLikes((count) => count - 1);
+      }
     } else {
-      setLiked(false);
-      setLikes((count) => count - 1);
+      handleReplyLike();
+    }
+  }
+
+  async function handleReplyLike() {
+    if (userInfo) {
+      const token = localStorage.getItem("token");
+
+      const data = await fetch(
+        `${backendURL}/api/tweet/${tweet.tweet}/comment/${tweet._id}/like`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ).then((res) => res.json());
+
+      if (data.success && data.status == "Comment liked.") {
+        setLiked(true);
+        setLikes((count) => count + 1);
+      } else {
+        setLiked(false);
+        setLikes((count) => count - 1);
+      }
     }
   }
 
   async function handleRetweet(e) {
     e.stopPropagation();
 
-    if (retweeted == true) {
-      const data = await retweet(tweet._id);
+    if (!reply && userInfo) {
+      if (retweeted) {
+        const data = await retweet(tweet._id);
 
-      if (data.success == true) {
-        setRetweeted(false);
-        setRetweets((count) => count - 1);
-      }
-    } else {
-      const data = await retweet(tweet._id);
+        if (data.success) {
+          setRetweeted(false);
+          setRetweets((count) => count - 1);
+        }
+      } else {
+        const data = await retweet(tweet._id);
 
-      if (data.success == true) {
-        setRetweeted(true);
-        setRetweets((count) => count + 1);
+        if (data.success) {
+          setRetweeted(true);
+          setRetweets((count) => count + 1);
+        }
       }
     }
   }
@@ -177,9 +216,20 @@ export default function Tweet({ tweet, rest, removeTweet }) {
   return (
     <div
       ref={tweetRef}
-      className="hover:bg-gray-200/5 border-b relative border-gray-700/75 w-full px-4 pt-3 pb-2 flex gap-3"
+      className={
+        !bar
+          ? "hover:bg-gray-200/5 relative border-b border-gray-700/75 w-full px-4 pt-3 pb-2 flex gap-3"
+          : reply
+          ? "hover:bg-gray-200/5 relative border-b border-gray-700/75 w-full px-4 pt-3 flex gap-3"
+          : "hover:bg-gray-200/5 relative flex gap-3 px-4 pt-3"
+      }
     >
-      {openTweetMenu == true ? (
+      {reply ? (
+        <div className="top-0 left-[39px] h-[12px] absolute w-[1.5px] bg-[#333639]"></div>
+      ) : (
+        <></>
+      )}
+      {openTweetMenu && userInfo ? (
         <div
           style={{ boxShadow: "0 0 3px #fff" }}
           className="absolute flex flex-col rounded-lg right-0 mr-4 bg-black z-10"
@@ -223,7 +273,7 @@ export default function Tweet({ tweet, rest, removeTweet }) {
       ) : (
         <></>
       )}
-      {openMenu == true ? (
+      {openMenu && !reply ? (
         <div
           ref={dropdownMenu}
           style={{ boxShadow: "0 0 3px #fff" }}
@@ -236,7 +286,7 @@ export default function Tweet({ tweet, rest, removeTweet }) {
             <Image src="/link-variant.svg" width={28} height={28} />
             <p className="font-bold">Copy link to Tweet</p>
           </button>
-          {bookmarked == false ? (
+          {!bookmarked && userInfo ? (
             <button
               onClick={addBookmark}
               className="flex gap-2 px-4 py-2 hover:bg-stone-700/20 w-full text-start"
@@ -244,7 +294,7 @@ export default function Tweet({ tweet, rest, removeTweet }) {
               <Image src="/bookmark-plus.svg" width={28} height={28} />
               <p>Bookmark</p>
             </button>
-          ) : (
+          ) : bookmarked && userInfo ? (
             <button
               onClick={removeBookmarkA}
               className="flex gap-2 px-4 py-2 hover:bg-stone-700/20 w-full text-start"
@@ -252,24 +302,34 @@ export default function Tweet({ tweet, rest, removeTweet }) {
               <Image src="/bookmark-off.svg" width={28} height={28} />
               <p>Remove Tweet from Bookmarks</p>
             </button>
+          ) : (
+            <></>
           )}
         </div>
       ) : (
         <></>
       )}
-      <Link
-        onClick={stop}
-        href={`/user/${tweet?.user.handle}`}
-        className="w-[58px] h-[52px]"
-      >
-        <img
-          src={tweet?.user.profile_picture_url
-            .replace(`"`, "")
-            .replace(",", "")}
-          alt="pfp"
-          className="w-[48px] h-[48px] rounded-full"
-        />
-      </Link>
+
+      <div className="flex flex-col justify-self-center">
+        <Link
+          onClick={stop}
+          href={`/user/${tweet?.user.handle}`}
+          className="w-[48px] h-[48px]"
+        >
+          <img
+            src={tweet?.user.profile_picture_url
+              .replace(`"`, "")
+              .replace(",", "")}
+            alt="pfp"
+            className="w-[48px] h-[48px] rounded-full"
+          />
+        </Link>
+        {bar ? (
+          <div className="w-[1.5px] bg-[#333639] h-full self-center"></div>
+        ) : (
+          <></>
+        )}
+      </div>
       <div className="w-full flex flex-col">
         <div className="flex gap-1">
           <Link
@@ -279,6 +339,11 @@ export default function Tweet({ tweet, rest, removeTweet }) {
           >
             <p className="font-bold">{tweet.user.username}</p>
           </Link>
+          {tweet.user.verifiedCheckmark ? (
+            <Checkmark className="w-[17px] h-[17px] self-center mt-[3px]" />
+          ) : (
+            <></>
+          )}
           <Link onClick={stop} href={`/user/${tweet?.user.handle}`}>
             <p className="text-secondary">@{tweet.user.handle}</p>
           </Link>
@@ -298,32 +363,56 @@ export default function Tweet({ tweet, rest, removeTweet }) {
             height={19}
           />
         </div>
-        <pre
-          style={{
-            fontFamily: `ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"`,
-          }}
-        >
-          {tweetContent.map((item) => {
-            if (!item.type) {
-              return item.content + " ";
-            } else {
-              return (
-                <Link href={`/hashtag/${item.content.replace("#", "")}`}>
-                  <span
-                    onClick={(e) => e.stopPropagation()}
-                    className="text-[#1d9bf0] cursor-pointer hover:underline"
-                  >
-                    {item.content}
-                  </span>{" "}
-                </Link>
-              );
-            }
-          })}
-        </pre>
-        <div className="mt-3 flex">
+        {tweet.content != "" ? (
+          <>
+            <pre
+              style={{
+                fontFamily: `ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"`,
+              }}
+            >
+              {tweetContent.map((item) => {
+                if (!item.type) {
+                  return <span key={uniqid()}>{item.content + " "}</span>;
+                } else {
+                  return (
+                    <Link
+                      key={uniqid()}
+                      href={`/hashtag/${item.content.replace("#", "")}`}
+                    >
+                      <span
+                        onClick={(e) => e.stopPropagation()}
+                        className="text-[#1d9bf0] cursor-pointer hover:underline"
+                      >
+                        {item.content}
+                      </span>{" "}
+                    </Link>
+                  );
+                }
+              })}
+            </pre>
+            {tweet.giphyUrl ? (
+              <div className="mt-2 relative">
+                <p className="absolute bottom-0 mb-2 ml-2 px-1 rounded-md font-bold bg-black w-min-content h-min-content">
+                  GIF
+                </p>
+                <img src={tweet.giphyUrl} className="rounded-xl" />
+              </div>
+            ) : (
+              <></>
+            )}
+          </>
+        ) : (
+          <div className="mt-2 relative">
+            <p className="absolute bottom-0 mb-2 ml-2 px-1 rounded-md font-bold bg-black w-min-content h-min-content">
+              GIF
+            </p>
+            <img src={tweet.giphyUrl} className="rounded-xl" />
+          </div>
+        )}
+        <div className={bar ? "mt-3 flex pb-2" : "mt-3 flex"}>
           <div className="text-secondary hover:text-[#1d9bf0] flex-grow flex-basis flex gap-4">
             <Comment className="h-6 w-6" useCurrentColor={true} />
-            <p>{rest.comments.count}</p>
+            <p>{rest.comments ? rest.comments : 0}</p>
           </div>
           <div
             onClick={handleRetweet}
