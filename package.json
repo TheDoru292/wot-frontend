@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@giphy/js-fetch-api": "^4.8.1",
+    "@giphy/react-components": "^6.8.1",
     "@next/font": "13.2.4",
     "@reduxjs/toolkit": "^1.9.3",
     "date-fns": "^2.29.3",
@@ -20,7 +22,9 @@
     "react-dom": "18.2.0",
     "react-redux": "^8.0.5",
     "redux": "^4.2.1",
-    "redux-persist": "^6.0.0"
+    "redux-persist": "^6.0.0",
+    "socket.io-client": "^4.6.1",
+    "uniqid": "^5.4.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.14",
