@@ -236,7 +236,7 @@ export default function Status({ notFound, tweet }) {
       ) : (
         <></>
       )}
-      <main className="flex flex-grow flex-col">
+      <main className="flex max-w-[575px] flex-grow flex-col">
         <div
           style={{ backgroundColor: "rgba(0,0,0,0.65)", zIndex: "100" }}
           className="sticky top-[0.1px] backdrop-blur-xl px-4 py-1 h-[52px] flex gap-6 mb-3"
@@ -354,7 +354,50 @@ export default function Status({ notFound, tweet }) {
               />
             </div>
           </div>
-          <div className="text-[17px]">{tweet.tweet.content}</div>
+          {tweet.tweet.content != "" ? (
+            <div className="flex flex-col gap-1">
+              <pre
+                style={{
+                  fontFamily: `ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"`,
+                }}
+                className="font-[18px]"
+              >
+                {tweet.tweet.content.split(" ").map((item) => {
+                  if (item && item[0] == "#") {
+                    return item + " ";
+                  } else {
+                    return (
+                      <Link href={`/hashtag/${item.replace("#", "")}`}>
+                        <span
+                          onClick={(e) => e.stopPropagation()}
+                          className="text-[#1d9bf0] cursor-pointer hover:underline"
+                        >
+                          {item}
+                        </span>{" "}
+                      </Link>
+                    );
+                  }
+                })}
+              </pre>
+              {tweet.tweet.giphyUrl ? (
+                <div className="mt-2 relative">
+                  <p className="absolute bottom-0 mb-2 ml-2 px-1 rounded-md font-bold bg-black w-min-content h-min-content">
+                    GIF
+                  </p>
+                  <img src={tweet.tweet.giphyUrl} className="rounded-xl" />
+                </div>
+              ) : (
+                <></>
+              )}
+            </div>
+          ) : (
+            <div className="relative">
+              <p className="absolute bottom-0 mb-2 ml-2 px-1 rounded-md font-bold bg-black w-min-content h-min-content">
+                GIF
+              </p>
+              <img src={tweet.tweet.giphyUrl} className="rounded-xl w-full" />
+            </div>
+          )}
           <div className="text-secondary text-[15px]">
             <p>
               {format(new Date(tweet.tweet.posted_on), "h:mm b")}{" "}

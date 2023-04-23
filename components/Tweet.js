@@ -32,7 +32,6 @@ export default function Tweet({
   const [bookmarked, setBookmarked] = useState(rest.bookmarked || false);
   const [likes, setLikes] = useState(rest.likes);
   const [liked, setLiked] = useState(rest.liked || false);
-  const [tweetContent, setTweetContent] = useState([]);
   const [retweets, setRetweets] = useState(rest.retweets || 0);
   const [retweeted, setRetweeted] = useState(rest.retweeted || false);
   const [openTweetMenu, setOpenTweetMenu] = useState(false);
@@ -45,24 +44,6 @@ export default function Tweet({
   const tweetRef = useRef(null);
 
   const router = useRouter();
-
-  useEffect(() => {
-    handleTweet();
-  }, []);
-
-  function handleTweet() {
-    const tweetContent = tweet.content.split(" ");
-
-    setTweetContent(
-      tweetContent.map((item) => {
-        if (item[0] == "#") {
-          return { type: "hashtag", content: item };
-        }
-
-        return { content: item };
-      })
-    );
-  }
 
   function closeOpenMenu(e) {
     if (
@@ -370,20 +351,17 @@ export default function Tweet({
                 fontFamily: `ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"`,
               }}
             >
-              {tweetContent.map((item) => {
-                if (!item.type) {
-                  return <span key={uniqid()}>{item.content + " "}</span>;
+              {tweet.content.split(" ").map((item) => {
+                if (item && item[0] != "#") {
+                  return item + " ";
                 } else {
                   return (
-                    <Link
-                      key={uniqid()}
-                      href={`/hashtag/${item.content.replace("#", "")}`}
-                    >
+                    <Link href={`/hashtag/${item.replace("#", "")}`}>
                       <span
                         onClick={(e) => e.stopPropagation()}
                         className="text-[#1d9bf0] cursor-pointer hover:underline"
                       >
-                        {item.content}
+                        {item}
                       </span>{" "}
                     </Link>
                   );
