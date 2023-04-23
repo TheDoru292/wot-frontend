@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import LeftSidebar from "@/components/LeftSidebar";
 import RightSidebar from "@/components/RightSidebar";
 import { useRouter } from "next/router";
+import SearchExperience from "@/components/GifComponent";
 
 const backendURL = "http://localhost:3000";
 
@@ -14,6 +15,9 @@ export default function Home() {
   const { userInfo, userToken } = useSelector((state) => state.auth);
   const [tweets, setTweets] = useState([]);
   const [pageDetails, setPageDetails] = useState({});
+  const [gifMenu, setGifMenu] = useState(false);
+  const [gifId, setGifId] = useState("");
+  const [selected, setSelected] = useState("forYou");
   const router = useRouter();
 
   async function fetchTweets() {
@@ -31,27 +35,42 @@ export default function Home() {
 
     setPageDetails(tweets.pages);
     setTweets(tweets.tweets);
-
-    console.log(tweets.pages);
   }
 
   async function showMoreTweets() {
-    const token = localStorage.getItem("token");
+    if (selected == "forYou") {
+      const token = localStorage.getItem("token");
 
-    const fetchedTweets = await fetch(
-      `${backendURL}/api/tweet/?page=${pageDetails.nextPage || 1}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    ).then((res) => res.json());
+      const fetchedTweets = await fetch(
+        `${backendURL}/api/tweet/?page=${pageDetails.nextPage || 1}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ).then((res) => res.json());
 
-    setTweets([...tweets, ...fetchedTweets.tweets]);
-    setPageDetails(fetchedTweets.pages);
+      setTweets([...tweets, ...fetchedTweets.tweets]);
+      setPageDetails(fetchedTweets.pages);
+    } else {
+      const token = localStorage.getItem("token");
 
-    console.log(pageDetails);
+      const fetchedTweets = await fetch(
+        `${backendURL}/api/user/${userInfo.hande}/following/tweet?page=${
+          pageDetails.nextPage || 1
+        }`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      ).then((res) => res.json());
+
+      setTweets([...tweets, ...fetchedTweets.tweets]);
+      setPageDetails(fetchedTweets.pages);
+    }
   }
 
   function removeTweetFromArray(tweetId) {
@@ -60,6 +79,25 @@ export default function Home() {
 
   function addToArray(obj) {
     setTweets([obj, ...tweets]);
+  }
+
+  async function getFollowingTweets() {
+    const token = localStorage.getItem("token");
+
+    const fetchedTweets = await fetch(
+      `${backendURL}/api/user/${userInfo.handle}/following/tweet`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    ).then((res) => res.json());
+
+    setTweets(fetchedTweets.tweets);
+    setPageDetails(fetchedTweets.pages);
+
+    console.log(fetchedTweets);
   }
 
   useEffect(() => {
@@ -79,25 +117,73 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <LeftSidebar />
-      <main className="flex flex-grow flex-col">
+      {gifMenu == true ? (
+        <SearchExperience
+          onClick={(id) => {
+            setGifId(id);
+
+            console.log(id);
+
+            setGifMenu(false);
+          }}
+          close={() => setGifMenu(false)}
+        />
+      ) : (
+        <></>
+      )}
+      <main className="flex max-w-[575px] flex-grow flex-col">
         <div
           style={{ backgroundColor: "rgba(0,0,0,0.65)", zIndex: "100" }}
           className="sticky top-[0.1px] flex flex-col backdrop-blur-md border-b border-gray-700/75"
         >
           <h1 className="py-3 pl-4 text-lg font-bold">Home</h1>
           <div className="flex">
-            <div className="justify-center hover:bg-zinc-800/75 flex font-bold self-start h-full flex-grow flex-basis">
-              <div>
-                <p className="py-[13.2px]">For you</p>
-                <div className="h-[4.5px] w-[56px] rounded-full bg-sky-400"></div>
+            {selected == "forYou" ? (
+              <div className="cursor-pointer justify-center hover:bg-zinc-500/10 flex font-bold self-start h-full flex-grow flex-basis">
+                <div>
+                  <p className="py-[13.2px]">For you</p>
+                  <div className="h-[4.5px] w-[56px] rounded-full bg-sky-400"></div>
+                </div>
               </div>
-            </div>
-            <div className=" text-secondary font-bold hover:bg-zinc-800/75 flex justify-center flex-grow flex-basis">
-              <p className="py-4">Following</p>
-            </div>
+            ) : (
+              <div
+                onClick={() => {
+                  setSelected("forYou");
+                  setTweets([]);
+                  fetchTweets();
+                }}
+                className="cursor-pointer text-secondary font-bold hover:bg-zinc-500/10 flex justify-center flex-grow flex-basis"
+              >
+                <p className="py-4">For You</p>
+              </div>
+            )}
+            {selected == "following" ? (
+              <div className="cursor-pointer justify-center hover:bg-zinc-500/10 flex font-bold self-start h-full flex-grow flex-basis">
+                <div>
+                  <p className="py-[13.2px]">Following</p>
+                  <div className="h-[4.5px] w-[72px] rounded-full bg-sky-400"></div>
+                </div>
+              </div>
+            ) : (
+              <div
+                onClick={() => {
+                  setSelected("following");
+                  setTweets([]);
+                  getFollowingTweets();
+                }}
+                className="cursor-pointer text-secondary font-bold hover:bg-zinc-500/10 flex justify-center flex-grow flex-basis"
+              >
+                <p className="py-4">Following</p>
+              </div>
+            )}
           </div>
         </div>
-        <PostTweet changeArray={addToArray} />
+        <PostTweet
+          changeArray={addToArray}
+          setGifMenu={setGifMenu}
+          gifId={gifId}
+          setGifId={setGifId}
+        />
         {tweets.map((item) => {
           return (
             <Tweet
