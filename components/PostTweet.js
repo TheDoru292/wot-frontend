@@ -1,13 +1,37 @@
 import { postTweet } from "@/lib/actions";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { GiphyFetch } from "@giphy/js-fetch-api";
+import Gif from "./Icons/Gif";
 
-export default function PostTweet({ changeArray }) {
+export default function PostTweet({
+  changeArray,
+  setGifMenu,
+  gifId,
+  setGifId,
+}) {
   const [tweetContent, setTweetContent] = useState("");
+  const [gif, setGif] = useState({});
   const { userInfo } = useSelector((state) => state.auth);
 
+  const gf = new GiphyFetch("AkO9AeIcPXbtD5m61zBn0IFSqCBxuk8M");
+
+  async function getGif() {
+    if (gifId) {
+      const { data } = await gf.gif(gifId);
+
+      setGif(data);
+
+      console.log(gif);
+    }
+  }
+
+  useEffect(() => {
+    getGif();
+  }, [gifId]);
+
   async function post() {
-    const data = await postTweet(tweetContent);
+    const data = await postTweet(tweetContent, gif.images.original.url);
 
     if (data.success == true) {
       const obj = {
@@ -22,6 +46,7 @@ export default function PostTweet({ changeArray }) {
             verifiedCheckmark: userInfo.verifiedCheckmark,
             bio: userInfo.bio,
           },
+          giphyUrl: gif.images.original.url,
         },
         bookmarked: false,
         following: false,
@@ -34,6 +59,8 @@ export default function PostTweet({ changeArray }) {
 
       changeArray(obj);
       setTweetContent("");
+      setGif({});
+      setGifId(null);
     }
   }
 
@@ -53,15 +80,42 @@ export default function PostTweet({ changeArray }) {
           value={tweetContent}
           onChange={(e) => setTweetContent(e.target.value)}
         />
+        {gif.images ? (
+          <div className="relative pb-2">
+            <button
+              style={{
+                backgroundColor: "rgba(15, 20, 25, 0.75)",
+                backdropFilter: "blur(4px)",
+              }}
+              onClick={() => {
+                setGifId(null);
+                setGif({});
+              }}
+              className="absolute mt-2 ml-2 p-1 hover:bg-white cursor-pointer bg-black rounded-full"
+            >
+              <img src="/close.svg" className="w-6 h-6" />
+            </button>
+            <p className="absolute bottom-0 mb-4 ml-2 px-1 rounded-md font-bold bg-black w-min-content h-min-content">
+              GIF
+            </p>
+            <img src={gif.images.original.url} className="w-full rounded-xl" />
+          </div>
+        ) : (
+          <></>
+        )}
         <div className="flex">
           <div className="flex flex-grow gap-2">
             <p>Image</p>
-            <p>Gif</p>
+            <Gif
+              className="w-8 h-8 cursor-pointer"
+              onClick={() => setGifMenu(true)}
+              stroke="#38bdf8"
+            />
             <p>Poll</p>
             <p>Location</p>
           </div>
           <button
-            disabled={tweetContent.length == 0 ? true : false}
+            disabled={tweetContent.length >= 3 || gif ? false : true}
             onClick={post}
             className="disabled:bg-sky-400/50 disabled:text-white/50 bg-sky-400/[.85] py-[5px] px-4 rounded-full font-bold"
           >
