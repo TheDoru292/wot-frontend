@@ -3,11 +3,13 @@ import Tweet from "@/components/Tweet";
 import RightSidebar from "@/components/RightSidebar";
 import LeftSidebar from "@/components/LeftSidebar";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 const backendURL = "http://localhost:3000";
 
 export default function Bookmarks() {
   const [bookmarks, setBookmarks] = useState([]);
+  const { userInfo } = useSelector((state) => state.auth);
 
   useEffect(() => {
     async function getBookmarks() {
@@ -39,10 +41,10 @@ export default function Bookmarks() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <LeftSidebar />
-      <main className="flex flex-grow flex-col">
+      <main className="flex max-w-[575px] flex-grow flex-col">
         <div className="py-1 pl-4 sticky top-[0.1px] flex flex-col backdrop-blur-md">
           <h1 className="text-lg font-bold">Bookmarks</h1>
-          <p className="text-sm text-secondary">@username</p>
+          <p className="text-sm text-secondary">@{userInfo.handle}</p>
         </div>
         {bookmarks.map((item) => {
           return <Tweet key={item._id} tweet={item.tweet} rest={item} />;
