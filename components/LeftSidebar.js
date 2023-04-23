@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import Menu from "./Icons/Menu";
+import Checkmark from "./Icons/Checkmark";
 
 export default function LeftSidebar() {
   const [openMenu, setOpenMenu] = useState(false);
@@ -25,7 +26,10 @@ export default function LeftSidebar() {
       name: "Explore",
       link: "/explore",
       icon: "/hashtag.svg",
-      active: router.pathname == "/explore" ? true : false,
+      active:
+        router.pathname == "/explore" || router.pathname == "/search"
+          ? true
+          : false,
       activeIcon: "/hashtag.svg",
       showIfNotLogged: true,
     },
@@ -72,7 +76,7 @@ export default function LeftSidebar() {
   document.addEventListener("mousedown", closeOpenMenu);
 
   return (
-    <div className="overflow-y-auto sticky top-[0.0001px] h-screen justify-end flex w-[405px] border-r border-gray-700/75">
+    <div className="overflow-y-auto sticky top-0 h-screen justify-end flex w-[405px] border-r border-gray-700/75">
       <div className="flex gap-5 flex-col w-[260px]">
         <div className="ml-2 mt-3 bg-red-400 w-10 h-10 rounded-full"></div>
         <div className="flex flex-grow flex-col gap-2">
@@ -115,7 +119,7 @@ export default function LeftSidebar() {
           <div
             ref={menuRef}
             style={{ boxShadow: "0 0 3px #fff" }}
-            className="flex rounded-lg"
+            className="flex rounded-lg mr-3"
           >
             <Link href={"/logout"} className="w-full hover:bg-stone-700/20">
               <button className="font-bold px-4 py-2">
@@ -147,7 +151,14 @@ export default function LeftSidebar() {
               alt=""
             />
             <div className="flex flex-grow flex-col">
-              <p className="font-bold">{userInfo.username}</p>
+              <div className="flex gap-1 items-center">
+                <p className="font-bold">{userInfo.username}</p>
+                {userInfo.verifiedCheckmark ? (
+                  <Checkmark className="w-[17px] h-[17px] self-center mt-[3px]" />
+                ) : (
+                  <></>
+                )}
+              </div>
               <p className="text-secondary">@{userInfo.handle}</p>
             </div>
             <div className="self-center">
