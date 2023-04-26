@@ -10,6 +10,7 @@ import Link from "next/link";
 import { unfollow, follow } from "@/lib/actions";
 import EditProfile from "@/components/EditProfile";
 import Checkmark from "@/components/Icons/Checkmark";
+import { useRouter } from "next/router";
 
 const backendURL = "http://localhost:3000";
 
@@ -28,27 +29,41 @@ export default function UserProfile({ user }) {
   const [selected, setSelected] = useState("tweets");
 
   const { userInfo } = useSelector((state) => state.auth);
+  const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    async function getTweets() {
-      const data = await fetch(
-        `${backendURL}/api/user/${user.user.handle}/tweets`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      ).then((res) => res.json());
-
-      setTweets(data.tweets);
-      setTweetPageDetails(data.pages);
-    }
-
     getTweets();
   }, []);
+
+  useEffect(() => {
+    setTweets([]);
+    setReplies([]);
+    setLikes([]);
+    setTweetPageDetails({});
+    setRepliesPageDetails({});
+    setLikePageDetails({});
+    setFollowing(user.reqUserFollowing);
+    setFollowers(user.followers);
+    setSelected("tweets");
+    getTweets();
+  }, [router.asPath]);
+
+  async function getTweets() {
+    const token = localStorage.getItem("token");
+
+    const data = await fetch(
+      `${backendURL}/api/user/${user.user.handle}/tweets`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    ).then((res) => res.json());
+
+    setTweets(data.tweets);
+    setTweetPageDetails(data.pages);
+  }
 
   async function showMoreTweets() {
     const token = localStorage.getItem("token");
