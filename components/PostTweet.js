@@ -31,7 +31,7 @@ export default function PostTweet({
   }, [gifId]);
 
   async function post() {
-    const data = await postTweet(tweetContent, gif.images.original.url);
+    const data = await postTweet(tweetContent, gif);
 
     if (data.success == true) {
       const obj = {
@@ -46,7 +46,7 @@ export default function PostTweet({
             verifiedCheckmark: userInfo.verifiedCheckmark,
             bio: userInfo.bio,
           },
-          giphyUrl: gif.images.original.url,
+          giphyUrl: gif ? gif.images.original.url : null,
         },
         bookmarked: false,
         following: false,
@@ -105,7 +105,6 @@ export default function PostTweet({
         )}
         <div className="flex">
           <div className="flex flex-grow gap-2">
-            <p>Image</p>
             <Gif
               className={!gif ? "w-8 h-8 cursor-pointer" : "w-8 h-8"}
               onClick={() => {
@@ -115,8 +114,6 @@ export default function PostTweet({
               }}
               stroke={!gif ? "#38bdf8" : "#2786b0"}
             />
-            <p>Poll</p>
-            <p>Location</p>
           </div>
           <button
             disabled={tweetContent.length >= 3 || gif ? false : true}
