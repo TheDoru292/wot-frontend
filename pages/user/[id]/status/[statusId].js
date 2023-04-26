@@ -363,7 +363,7 @@ export default function Status({ notFound, tweet }) {
                 className="font-[18px]"
               >
                 {tweet.tweet.content.split(" ").map((item) => {
-                  if (item && item[0] == "#") {
+                  if (item && item[0] != "#") {
                     return item + " ";
                   } else {
                     return (
