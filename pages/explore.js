@@ -100,10 +100,17 @@ export default function Explore() {
             <h2 className="px-4 pt-2 pb-2 text-lg font-bold">Trending tags</h2>
             {tags.map((item) => {
               return (
-                <div className="px-4 py-3 hover:bg-zinc-800/50" key={item._id}>
-                  <p className="font-bold">{item._id}</p>
-                  <p className="text-sm text-secondary">{item.number} tweets</p>
-                </div>
+                <Link href={`/hashtag/${item._id.replace("#", "")}`}>
+                  <div
+                    className="px-4 py-3 hover:bg-zinc-800/50"
+                    key={item._id}
+                  >
+                    <p className="font-bold">{item._id}</p>
+                    <p className="text-sm text-secondary">
+                      {item.number} tweets
+                    </p>
+                  </div>
+                </Link>
               );
             })}
             <Link href="/trends">
