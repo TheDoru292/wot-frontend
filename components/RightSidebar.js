@@ -8,6 +8,7 @@ import RsUser from "./RsUser";
 export default function RightSidebar({ openCreateAccount }) {
   const [tags, setTags] = useState([]);
   const [users, setUsers] = useState([]);
+  const [search, setSearch] = useState("");
   const router = useRouter();
   const { userInfo } = useSelector((state) => state.auth);
   const sidebar = useRef(null);
@@ -63,8 +64,14 @@ export default function RightSidebar({ openCreateAccount }) {
             type="text"
             name="search"
             id="search"
-            className="py-2 px-4 bg-stone-800 rounded-full text-gray-400"
+            className="w-full py-2 px-4 bg-[#202327] rounded-full text-gray-400 placeholder:text-gray-400"
             placeholder="Search Wot"
+            onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key == "Enter") {
+                router.push(`/search?q=${search.split(" ").join("+")}`);
+              }
+            }}
           />
         )}
         {router.pathname == "/explore" || router.pathname == "/trends" ? (
