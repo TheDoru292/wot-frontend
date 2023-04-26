@@ -59,7 +59,7 @@ export default function PostTweet({
 
       changeArray(obj);
       setTweetContent("");
-      setGif({});
+      setGif(null);
       setGifId(null);
     }
   }
