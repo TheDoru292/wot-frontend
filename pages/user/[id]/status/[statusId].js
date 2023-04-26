@@ -152,19 +152,23 @@ export default function Status({ notFound, tweet }) {
   async function replyA() {
     const data = await reply(tweet.tweet._id, replyMessage);
 
-    console.log(data);
-
     const replyObj = {
-      _id: data.comment._id,
-      content: replyMessage,
-      posted_on: new Date(),
-      tweet: tweet.tweet._id,
-      user: userInfo,
+      comment: {
+        _id: data.comment._id,
+        content: replyMessage,
+        posted_on: new Date(),
+        tweet: tweet.tweet._id,
+        user: userInfo,
+      },
+      like: false,
+      likes: {
+        count: 0,
+      },
     };
 
     setReplyMessage("");
 
-    setReplies([...replies, replyObj]);
+    setReplies([replyObj, ...replies]);
   }
 
   function closeOpenMenu(e) {
