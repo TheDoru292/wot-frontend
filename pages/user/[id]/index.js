@@ -135,7 +135,7 @@ export default function UserProfile({ user }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <LeftSidebar />
-      {openEditProfile && userInfo == true ? (
+      {openEditProfile == true ? (
         <EditProfile
           userInfo={userInfo}
           close={() => {
