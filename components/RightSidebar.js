@@ -75,15 +75,17 @@ export default function RightSidebar({ openCreateAccount }) {
               <h2 className="px-4 pb-2 text-lg font-bold">Trending</h2>
               {tags.map((item) => {
                 return (
-                  <div
-                    key={item._id}
-                    className="px-4 py-3 hover:bg-zinc-800/50"
-                  >
-                    <p className="font-bold">{item._id}</p>
-                    <p className="text-sm text-secondary">
-                      {item.number} tweets
-                    </p>
-                  </div>
+                  <Link href={`/hashtag/${item._id.replace("#", "")}`}>
+                    <div
+                      key={item._id}
+                      className="px-4 py-3 hover:bg-zinc-800/50"
+                    >
+                      <p className="font-bold">{item._id}</p>
+                      <p className="text-sm text-secondary">
+                        {item.number} tweets
+                      </p>
+                    </div>
+                  </Link>
                 );
               })}
               <Link href="/trends">
