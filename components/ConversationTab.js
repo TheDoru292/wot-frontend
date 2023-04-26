@@ -44,8 +44,8 @@ export default function ConversationTab({ setConv }) {
           />
         </div>
         <div className="flex flex-col">
-          {conversations.map((item) => (
-            <ConversationTabComponent conv={item} setConv={setConv} />
+          {conversations.map((item, i) => (
+            <ConversationTabComponent key={i} conv={item} setConv={setConv} />
           ))}
         </div>
       </div>

@@ -92,6 +92,7 @@ export default function Following({ user }) {
           {users.map((item) => {
             return (
               <User
+                key={item._id}
                 user={item.user.following}
                 following={item.following}
                 currentUser={userInfo}

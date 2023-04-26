@@ -65,13 +65,16 @@ export default function Notifications() {
           </div>
         </div>
         <div className="flex flex-col">
-          {filteredNotifications.map((item) => {
+          {filteredNotifications.map((item, i) => {
             if (item.action == "comment") {
-              return <div className="px-4 py-3 hover:bg-white/5"></div>;
+              return <div key={i} className="px-4 py-3 hover:bg-white/5"></div>;
             }
             if (item.action == "follow") {
               return (
-                <div className="px-3 py-3 hover:bg-white/5 border-b border-stone-700/75">
+                <div
+                  key={i}
+                  className="px-3 py-3 hover:bg-white/5 border-b border-stone-700/75"
+                >
                   <div className="flex gap-3">
                     <img
                       src={item.user.profile_picture_url

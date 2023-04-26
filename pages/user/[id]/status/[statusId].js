@@ -367,7 +367,10 @@ export default function Status({ notFound, tweet }) {
                     return item + " ";
                   } else {
                     return (
-                      <Link href={`/hashtag/${item.replace("#", "")}`}>
+                      <Link
+                        key={item}
+                        href={`/hashtag/${item.replace("#", "")}`}
+                      >
                         <span
                           onClick={(e) => e.stopPropagation()}
                           className="text-[#1d9bf0] cursor-pointer hover:underline"
@@ -525,7 +528,7 @@ export default function Status({ notFound, tweet }) {
         </div>
         <div>
           {replies.map((item) => {
-            return <CommentComp comment={item} />;
+            return <CommentComp key={item._id} comment={item} />;
           })}
         </div>
       </main>

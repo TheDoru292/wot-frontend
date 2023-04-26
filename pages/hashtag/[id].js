@@ -59,7 +59,9 @@ export default function Hashtag({ params }) {
           <p>Loading...</p>
         ) : (
           tweets.map((item) => {
-            return <Tweet tweet={item.tweet} rest={item} />;
+            return (
+              <Tweet key={item.tweet._id} tweet={item.tweet} rest={item} />
+            );
           })
         )}
       </main>

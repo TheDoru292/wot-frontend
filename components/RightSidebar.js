@@ -82,7 +82,10 @@ export default function RightSidebar({ openCreateAccount }) {
               <h2 className="px-4 pb-2 text-lg font-bold">Trending</h2>
               {tags.map((item) => {
                 return (
-                  <Link href={`/hashtag/${item._id.replace("#", "")}`}>
+                  <Link
+                    key={item._id}
+                    href={`/hashtag/${item._id.replace("#", "")}`}
+                  >
                     <div
                       key={item._id}
                       className="px-4 py-3 hover:bg-zinc-800/50"
@@ -109,7 +112,7 @@ export default function RightSidebar({ openCreateAccount }) {
           <div className="flex flex-col pt-2 bg-[#16181c] rounded-xl">
             <h2 className="px-4 pb-2 text-lg font-bold">Who to follow</h2>
             {users.map((item) => {
-              return <RsUser user={item} />;
+              return <RsUser key={item.user._id} user={item} />;
             })}
             <Link href="/connect_people">
               <p className="px-4 py-2 pb-4 rounded-b-xl text-sky-400 hover:bg-zinc-800/50">

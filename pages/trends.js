@@ -43,11 +43,13 @@ export default function Trends() {
         <div className="flex flex-col">
           {tags.map((item) => {
             return (
-              <div className="px-4 py-2 hover:bg-white/5">
-                <p className="text-secondary text-sm">Trending</p>
-                <p className="font-bold">{item._id}</p>
-                <p className="text-secondary text-sm">{item.number} tweets</p>
-              </div>
+              <Link href={`/hashtag/${item._id.replace("#", "")}`}>
+                <div key={item._id} className="px-4 py-2 hover:bg-white/5">
+                  <p className="text-secondary text-sm">Trending</p>
+                  <p className="font-bold">{item._id}</p>
+                  <p className="text-secondary text-sm">{item.number} tweets</p>
+                </div>
+              </Link>
             );
           })}
         </div>

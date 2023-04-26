@@ -159,7 +159,13 @@ export default function Search() {
                     Unfortunatley, we didn't find any tweets with those terms.
                   </p>
                 ) : (
-                  tweets.map((item) => <Tweet tweet={item.tweet} rest={item} />)
+                  tweets.map((item) => (
+                    <Tweet
+                      key={item.tweet._id}
+                      tweet={item.tweet}
+                      rest={item}
+                    />
+                  ))
                 )
               ) : (
                 <></>

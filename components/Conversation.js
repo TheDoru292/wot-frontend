@@ -99,6 +99,7 @@ export default function Conversation({ conversation }) {
             {fetched ? (
               messages.map((message, i) => (
                 <Message
+                  key={i}
                   index={i}
                   message={message}
                   messages={messages}

@@ -398,12 +398,14 @@ export default function UserProfile({ user }) {
               return (
                 <>
                   <Tweet
+                    key={item._id}
                     tweet={item.tweet}
                     rest={item.tweetStats}
                     bar={true}
                     reply={false}
                   />
                   <Tweet
+                    key={item._id}
                     tweet={item.comment}
                     rest={item.commentStats}
                     reply={true}
@@ -416,7 +418,9 @@ export default function UserProfile({ user }) {
           )}
           {selected == "likes" ? (
             likes.map((item) => {
-              return <Tweet tweet={item.tweet} rest={item} />;
+              return (
+                <Tweet key={item.tweet._id} tweet={item.tweet} rest={item} />
+              );
             })
           ) : (
             <></>

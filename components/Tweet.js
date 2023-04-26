@@ -356,7 +356,7 @@ export default function Tweet({
                   return item + " ";
                 } else {
                   return (
-                    <Link href={`/hashtag/${item.replace("#", "")}`}>
+                    <Link key={item} href={`/hashtag/${item.replace("#", "")}`}>
                       <span
                         onClick={(e) => e.stopPropagation()}
                         className="text-[#1d9bf0] cursor-pointer hover:underline"

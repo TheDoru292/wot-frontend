@@ -94,6 +94,7 @@ export default function Follower({ user }) {
 
             return (
               <User
+                key={item._id}
                 user={item.user.follower}
                 following={item.following}
                 currentUser={userInfo}

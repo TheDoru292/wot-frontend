@@ -40,6 +40,7 @@ export default function AllLikes({ close, tweetId }) {
           {users.map((item) => {
             return (
               <User
+                key={item._id}
                 user={item.user}
                 following={item.following}
                 currentUser={userInfo}
