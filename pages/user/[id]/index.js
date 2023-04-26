@@ -55,7 +55,7 @@ export default function UserProfile({ user }) {
 
     const fetchedTweets = await fetch(
       `${backendURL}/api/user/${user.user.handle}/tweets?page=${
-        pageDetails.nextPage || 1
+        tweetPageDetails.nextPage || 1
       }`,
       {
         method: "GET",
@@ -67,8 +67,6 @@ export default function UserProfile({ user }) {
 
     setTweets([...tweets, ...fetchedTweets.tweets]);
     setTweetPageDetails(fetchedTweets.pages);
-
-    console.log(pageDetails);
   }
 
   async function fetchComments() {
@@ -426,17 +424,32 @@ export default function UserProfile({ user }) {
             <></>
           )}
           {tweetPageDetails.hasNextPage && selected == "tweets" ? (
-            <p onClick={showMoreTweets}>Show more</p>
+            <p
+              className="p-2 font-bold cursor-pointer hover:text-blue-300"
+              onClick={showMoreTweets}
+            >
+              Show more
+            </p>
           ) : (
             <></>
           )}
           {replyPageDetails.hasNextPage && selected == "comments" ? (
-            <p onClick={fetchComments}>Show more</p>
+            <p
+              className="p-2 font-bold cursor-pointer hover:text-blue-300"
+              onClick={fetchComments}
+            >
+              Show more
+            </p>
           ) : (
             <></>
           )}
           {likePageDetails.hasNextPage && selected == "likes" ? (
-            <p onClick={fetchLikedTweets}>Show more</p>
+            <p
+              className="p-2 font-bold cursor-pointer hover:text-blue-300"
+              onClick={fetchLikedTweets}
+            >
+              Show more
+            </p>
           ) : (
             <></>
           )}
