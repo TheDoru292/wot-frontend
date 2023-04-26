@@ -47,22 +47,8 @@ export default function Notifications() {
       </Head>
       <LeftSidebar />
       <main className="flex max-w-[575px] flex-grow flex-col">
-        <div className="sticky top-[0.1px] flex flex-col backdrop-blur-md border-b border-gray-700/75">
+        <div className="sticky top-[0.1px] flex flex-col backdrop-blur-md">
           <h1 className="py-3 pl-4 text-lg font-bold">Notifications</h1>
-          <div className="flex">
-            <div className="justify-center hover:bg-zinc-800/75 flex font-bold self-start h-full flex-grow flex-basis">
-              <div>
-                <p className="py-[13.2px]">All</p>
-                <div className="h-[4.5px] w-[23px] rounded-full bg-sky-400"></div>
-              </div>
-            </div>
-            <div className=" text-secondary font-bold hover:bg-zinc-800/75 flex justify-center flex-grow flex-basis">
-              <p className="py-4">Comments</p>
-            </div>
-            <div className=" text-secondary font-bold hover:bg-zinc-800/75 flex justify-center flex-grow flex-basis">
-              <p className="py-4">Likes</p>
-            </div>
-          </div>
         </div>
         <div className="flex flex-col">
           {filteredNotifications.map((item, i) => {
