@@ -195,7 +195,12 @@ export default function Home() {
           );
         })}
         {pageDetails.hasNextPage == true ? (
-          <p onClick={showMoreTweets}>Show more</p>
+          <p
+            className="p-2 font-bold cursor-pointer hover:text-blue-300"
+            onClick={showMoreTweets}
+          >
+            Show more
+          </p>
         ) : (
           <></>
         )}

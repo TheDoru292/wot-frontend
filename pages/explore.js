@@ -118,6 +118,16 @@ export default function Explore() {
               return <Tweet key={item._id} rest={item} tweet={item.tweet} />;
             })}
           </div>
+          {pageDetails.hasNextPage == true ? (
+            <p
+              className="p-2 font-bold cursor-pointer hover:text-blue-300"
+              onClick={showMoreTweets}
+            >
+              Show more
+            </p>
+          ) : (
+            <></>
+          )}
         </main>
         <RightSidebar openCreateAccount={() => setOpenRegister(true)} />
       </div>
@@ -150,6 +160,7 @@ export default function Explore() {
       ) : (
         <></>
       )}
+
       {openLogin == true ? (
         <Login
           close={() => setOpenLogin(false)}
