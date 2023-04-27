@@ -26,20 +26,25 @@ export default function Login({ close, register }) {
   }
 
   return (
-    <div className="fixed top-0 left-0 w-screen h-screen z-50">
+    <div className="fixed top-0 left-0 w-screen h-screen z-[999]">
       <div
         style={{
           boxShadow: "0 0 0 50vmax rgba(91, 112, 131, 0.4)",
           transform: "translate(-50%, -50%)",
         }}
-        className="w-[600px] max-h-[650px] h-full rounded-2xl absolute z-20 left-1/2 top-1/2 flex flex flex-col gap-3 bg-black text-white"
+        className="w-[600px] max-h-[650px] h-full overflow-auto rounded-2xl absolute z-20 left-1/2 top-1/2 flex flex flex-col gap-3 bg-black text-white"
       >
         <div className="flex justify-center py-3 px-5">
           <img
             src="close.svg"
             className="fixed left-0 pl-5 h-10 w-10 cursor-pointer"
             alt="close"
-            onClick={close}
+            onClick={() => {
+              close();
+              document
+                .querySelector("body")
+                .classList.toggle("overflow-hidden");
+            }}
           ></img>
           <div className="bg-red-400 rounded-full h-10 w-10"></div>
         </div>
@@ -90,7 +95,7 @@ export default function Login({ close, register }) {
               Log in
             </button>
           </div>
-          <div>
+          <div className="mb-3">
             <p className="text-secondary">
               Or in the case you don't have an account, you can{" "}
               <span className="text-blue-400 cursor-pointer" onClick={register}>

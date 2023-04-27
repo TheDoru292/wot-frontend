@@ -9,8 +9,9 @@ export const registerUser = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      await fetch(`${backendURL}/api/user/register`, {
+      const data = await fetch(`${backendURL}/api/user/register`, {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },

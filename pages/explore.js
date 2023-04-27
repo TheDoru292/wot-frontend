@@ -151,13 +151,23 @@ export default function Explore() {
           </div>
           <div className="flex items-center gap-4 w-[540px] justify-center">
             <button
-              onClick={() => setOpenLogin(true)}
+              onClick={() => {
+                setOpenLogin(true);
+                document
+                  .querySelector("body")
+                  .classList.toggle("overflow-hidden");
+              }}
               className="bg-inherit border rounded-full h-9 w-[76px] font-bold"
             >
               Log in
             </button>
             <button
-              onClick={() => setOpenRegister(true)}
+              onClick={() => {
+                setOpenRegister(true);
+                document
+                  .querySelector("body")
+                  .classList.toggle("overflow-hidden");
+              }}
               className="bg-white text-black font-bold border rounded-full h-9 w-[132px]"
             >
               Create account

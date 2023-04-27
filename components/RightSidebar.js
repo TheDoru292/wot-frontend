@@ -131,7 +131,12 @@ export default function RightSidebar({ openCreateAccount }) {
             </p>
             <div className="flex flex-col gap-3">
               <button
-                onClick={openCreateAccount}
+                onClick={() => {
+                  openCreateAccount();
+                  document
+                    .querySelector("body")
+                    .classList.toggle("overflow-hidden");
+                }}
                 className="text-black bg-white py-[6.5px] font-bold rounded-full"
               >
                 Create account
