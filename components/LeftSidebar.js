@@ -110,7 +110,11 @@ export default function LeftSidebar() {
               <></>
             ) : (
               <div className="mr-14">
-                <button className="ml-2 py-3 rounded-full w-full bg-sky-600 hover:bg-sky-700 font-bold">
+                <button
+                  disabled={true}
+                  title="Tweeting with this button is disabled at this time, please use the home page instead."
+                  className="ml-2 py-3 rounded-full w-full bg-sky-600 disabled:bg-sky-600/50 disabled:text-white/50 hover:bg-sky-700 font-bold"
+                >
                   Tweet
                 </button>
               </div>
