@@ -3,7 +3,7 @@ import Link from "next/link";
 import Checkmark from "./Icons/Checkmark";
 import { useState } from "react";
 
-export default function User({ user, following, currentUser }) {
+export default function User({ user, following, currentUser, notLoggedIn }) {
   const [followingHover, setFollowingHover] = useState(false);
   const [isFollowing, setIsFollowing] = useState(following);
 
@@ -44,7 +44,7 @@ export default function User({ user, following, currentUser }) {
               </div>
               <p className="text-secondary">@{user.handle}</p>
             </div>
-            {currentUser.handle == user.handle ? (
+            {notLoggedIn || currentUser.handle == user.handle ? (
               <></>
             ) : isFollowing == true ? (
               <button
