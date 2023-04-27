@@ -1,5 +1,6 @@
 import { follow, unfollow } from "@/lib/actions";
 import Link from "next/link";
+import Checkmark from "./Icons/Checkmark";
 import { useState } from "react";
 
 export default function User({ user, following, currentUser }) {
@@ -33,7 +34,14 @@ export default function User({ user, following, currentUser }) {
         <div className="flex w-full flex-col">
           <div className="flex">
             <div className="flex-grow">
-              <p className="font-bold leading-5">{user.username}</p>
+              <div className="flex gap-1 items-center">
+                <p className="font-bold leading-5">{user.username}</p>
+                {user.verifiedCheckmark ? (
+                  <Checkmark className="w-[17px] h-[17px] self-center mt-[3px]" />
+                ) : (
+                  <></>
+                )}
+              </div>
               <p className="text-secondary">@{user.handle}</p>
             </div>
             {currentUser.handle == user.handle ? (
