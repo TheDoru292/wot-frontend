@@ -9,6 +9,9 @@ import Register from "@/components/Register";
 import { getRightSidebarTags } from "@/lib/actions";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { BrowserView, MobileView } from "react-device-detect";
+import MobileTopBar from "@/components/MobileTopBar";
+import MobileBottomBar from "@/components/MobileBottomBar";
 
 const backendURL = "http://localhost:3000";
 
@@ -73,31 +76,141 @@ export default function Explore() {
   }
 
   return (
-    <div className="relative bg-black min-h-screen text-gray-200">
-      <Head>
-        <title>Explore</title>
-      </Head>
-      <div className="flex">
-        <LeftSidebar />
-        <main className="flex max-w-[575px] flex-grow flex-col">
-          <div className="sticky top-0 backdrop-blur-md z-[999] px-4 py-[5px]">
-            <input
-              type="text"
-              name="search"
-              id="search"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full py-2 px-4 bg-[#202327] rounded-full text-gray-300 placeholder:text-gray-300"
-              placeholder="Search Wot"
-              onKeyDown={(e) => {
-                if (e.key == "Enter") {
-                  router.push(`/search?q=${search.split(" ").join("+")}`);
-                }
+    <>
+      <BrowserView>
+        <div className="relative bg-black min-h-screen text-gray-200">
+          <Head>
+            <title>Explore</title>
+          </Head>
+          <div className="flex">
+            <LeftSidebar />
+            <main className="flex max-w-[575px] flex-grow flex-col">
+              <div className="sticky top-0 backdrop-blur-md z-[999] px-4 py-[5px]">
+                <input
+                  type="text"
+                  name="search"
+                  id="search"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="w-full py-2 px-4 bg-[#202327] rounded-full text-gray-300 placeholder:text-gray-300"
+                  placeholder="Search Wot"
+                  onKeyDown={(e) => {
+                    if (e.key == "Enter") {
+                      router.push(`/search?q=${search.split(" ").join("+")}`);
+                    }
+                  }}
+                />
+              </div>
+              <div className="flex flex-col border-b pt-2 border-gray-700/75">
+                <h2 className="px-4 pt-2 pb-2 text-lg font-bold">
+                  Trending tags
+                </h2>
+                {tags.map((item) => {
+                  return (
+                    <Link href={`/hashtag/${item._id.replace("#", "")}`}>
+                      <div
+                        className="px-4 py-3 hover:bg-zinc-800/50"
+                        key={item._id}
+                      >
+                        <p className="font-bold">{item._id}</p>
+                        <p className="text-sm text-secondary">
+                          {item.number} tweets
+                        </p>
+                      </div>
+                    </Link>
+                  );
+                })}
+                <Link href="/trends">
+                  <p className="px-4 py-4 pb-4 text-sky-400 hover:bg-zinc-800/50">
+                    Show more
+                  </p>
+                </Link>
+              </div>
+              <div className="flex flex-col">
+                <h2 className="px-4 pt-2 pb-2 text-lg font-bold">Tweets</h2>
+                {tweets.map((item) => {
+                  return (
+                    <Tweet key={item._id} rest={item} tweet={item.tweet} />
+                  );
+                })}
+              </div>
+              {pageDetails.hasNextPage == true ? (
+                <p
+                  className="p-2 font-bold cursor-pointer hover:text-blue-300"
+                  onClick={showMoreTweets}
+                >
+                  Show more
+                </p>
+              ) : (
+                <></>
+              )}
+            </main>
+            <RightSidebar openCreateAccount={() => setOpenRegister(true)} />
+          </div>
+          {!userInfo ? (
+            <div className="sticky h-[66px] py-2 bottom-0 flex w-full bg-blue-500">
+              <div className="w-[405px]"></div>
+              <div className="flex flex-col flex-grow">
+                <p className="font-bold text-lg">
+                  Find out what's happening right now.
+                </p>
+                <p>
+                  With twitter you can quickly find out what's happening right
+                  now.
+                </p>
+              </div>
+              <div className="flex items-center gap-4 w-[540px] justify-center">
+                <button
+                  onClick={() => {
+                    setOpenLogin(true);
+                    document
+                      .querySelector("body")
+                      .classList.toggle("overflow-hidden");
+                  }}
+                  className="bg-inherit border rounded-full h-9 w-[76px] font-bold"
+                >
+                  Log in
+                </button>
+                <button
+                  onClick={() => {
+                    setOpenRegister(true);
+                    document
+                      .querySelector("body")
+                      .classList.toggle("overflow-hidden");
+                  }}
+                  className="bg-white text-black font-bold border rounded-full h-9 w-[132px]"
+                >
+                  Create account
+                </button>
+              </div>
+            </div>
+          ) : (
+            <></>
+          )}
+
+          {openLogin == true ? (
+            <Login
+              close={() => setOpenLogin(false)}
+              register={() => {
+                setOpenLogin(false);
+                setOpenRegister(true);
               }}
             />
-          </div>
+          ) : (
+            <></>
+          )}
+          {openRegister == true ? (
+            <Register close={() => setOpenRegister(false)} />
+          ) : (
+            <></>
+          )}
+        </div>
+      </BrowserView>
+      <MobileView className="bg-black min-h-screen text-white flex flex-col max-w-screen">
+        <MobileTopBar />
+        <main className="flex-grow">
           <div className="flex flex-col border-b pt-2 border-gray-700/75">
-            <h2 className="px-4 pt-2 pb-2 text-lg font-bold">Trending tags</h2>
+            <h2 className="px-4 text-lg font-bold">Trending tags</h2>
             {tags.map((item) => {
               return (
                 <Link href={`/hashtag/${item._id.replace("#", "")}`}>
@@ -136,64 +249,8 @@ export default function Explore() {
             <></>
           )}
         </main>
-        <RightSidebar openCreateAccount={() => setOpenRegister(true)} />
-      </div>
-      {!userInfo ? (
-        <div className="sticky h-[66px] py-2 bottom-0 flex w-full bg-blue-500">
-          <div className="w-[405px]"></div>
-          <div className="flex flex-col flex-grow">
-            <p className="font-bold text-lg">
-              Find out what's happening right now.
-            </p>
-            <p>
-              With twitter you can quickly find out what's happening right now.
-            </p>
-          </div>
-          <div className="flex items-center gap-4 w-[540px] justify-center">
-            <button
-              onClick={() => {
-                setOpenLogin(true);
-                document
-                  .querySelector("body")
-                  .classList.toggle("overflow-hidden");
-              }}
-              className="bg-inherit border rounded-full h-9 w-[76px] font-bold"
-            >
-              Log in
-            </button>
-            <button
-              onClick={() => {
-                setOpenRegister(true);
-                document
-                  .querySelector("body")
-                  .classList.toggle("overflow-hidden");
-              }}
-              className="bg-white text-black font-bold border rounded-full h-9 w-[132px]"
-            >
-              Create account
-            </button>
-          </div>
-        </div>
-      ) : (
-        <></>
-      )}
-
-      {openLogin == true ? (
-        <Login
-          close={() => setOpenLogin(false)}
-          register={() => {
-            setOpenLogin(false);
-            setOpenRegister(true);
-          }}
-        />
-      ) : (
-        <></>
-      )}
-      {openRegister == true ? (
-        <Register close={() => setOpenRegister(false)} />
-      ) : (
-        <></>
-      )}
-    </div>
+        <MobileBottomBar />
+      </MobileView>
+    </>
   );
 }

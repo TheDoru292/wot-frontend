@@ -6,6 +6,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getUsersFollowers } from "@/lib/actions";
+import { BrowserView, MobileView, isMobile } from "react-device-detect";
+import MobileBottomBar from "@/components/MobileBottomBar";
 
 export async function getServerSideProps({ params }) {
   const user = await fetch(`http://localhost:3000/api/user/${params.id}`, {
@@ -36,12 +38,79 @@ export default function Follower({ user }) {
   }, []);
 
   return (
-    <div className="bg-black flex min-h-screen text-gray-200">
+    <>
       <Head>
         <title>Following</title>
       </Head>
-      <LeftSidebar />
-      <main className="flex max-w-[575px] flex-grow flex-col">
+      <BrowserView>
+        <div className="bg-black flex min-h-screen text-gray-200">
+          <LeftSidebar />
+          <main className="flex max-w-[575px] flex-grow flex-col">
+            <div
+              style={{ backgroundColor: "rgba(0,0,0,0.65)" }}
+              className="w-full sticky flex flex-col top-[0.1px] backdrop-blur-xl pt-1 flex gap-1 border-b border-gray-700/75"
+            >
+              <div className="px-4 flex gap-6">
+                <Link href={`/user/${user.user.handle}`} className="flex">
+                  <div className="flex px-2 rounded-full hover:bg-stone-900">
+                    <img
+                      src="/arrow-left.svg"
+                      alt="back"
+                      className="self-center w-6 h-6"
+                    />
+                  </div>
+                </Link>
+                <div className="flex flex-col">
+                  <h2 className="leading-6 text-lg font-bold">
+                    {user.user.username}
+                  </h2>
+                  <p className="text-sm text-secondary">@{user.user.handle}</p>
+                </div>
+              </div>
+              <div className="flex w-full border-b border-gray-700/75">
+                <Link
+                  href={`/user/${user.user.handle}/followers`}
+                  className="flex-grow flex-basis"
+                >
+                  <div className="justify-center hover:bg-zinc-800/75 items-center flex font-bold h-full flex-grow flex-basis">
+                    <div>
+                      <p className="py-4">Followers</p>
+                      <div className="h-[4px] w-[72px] rounded-full bg-sky-400"></div>
+                    </div>
+                  </div>
+                </Link>
+                <Link
+                  href={`/user/${user.user.handle}/following`}
+                  className="flex-grow flex-basis"
+                >
+                  <div className="font-bold hover:bg-zinc-800/75 flex justify-center">
+                    <div>
+                      <p className="py-4">Following</p>
+                      <div className="h-[4px] w-[72px] rounded-full"></div>
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            </div>
+            <div className="flex flex-col">
+              {users.map((item) => {
+                console.log(item.following);
+
+                return (
+                  <User
+                    key={item._id}
+                    user={item.user.follower}
+                    following={item.following}
+                    currentUser={userInfo}
+                  />
+                );
+              })}
+            </div>
+          </main>
+          <RightSidebar />
+        </div>
+      </BrowserView>
+      <MobileView className="bg-black min-h-screen text-white flex flex-col max-w-screen">
         <div
           style={{ backgroundColor: "rgba(0,0,0,0.65)" }}
           className="w-full sticky flex flex-col top-[0.1px] backdrop-blur-xl pt-1 flex gap-1 border-b border-gray-700/75"
@@ -88,7 +157,7 @@ export default function Follower({ user }) {
             </Link>
           </div>
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-grow flex-col">
           {users.map((item) => {
             console.log(item.following);
 
@@ -102,8 +171,8 @@ export default function Follower({ user }) {
             );
           })}
         </div>
-      </main>
-      <RightSidebar />
-    </div>
+        <MobileBottomBar />
+      </MobileView>
+    </>
   );
 }

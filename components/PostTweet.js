@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { GiphyFetch } from "@giphy/js-fetch-api";
 import Gif from "./Icons/Gif";
+import { isMobile } from "react-device-detect";
 
 export default function PostTweet({
   changeArray,
@@ -68,7 +69,11 @@ export default function PostTweet({
     <div className="flex py-3 pb-2 px-4 gap-4 border-b border-gray-700/75">
       <img
         src={userInfo?.profile_picture_url.replace(`"`, "").replace(",", "")}
-        className="bg-red-400 w-12 h-12 rounded-full"
+        className={
+          !isMobile
+            ? "bg-red-400 w-12 h-12 rounded-full"
+            : "bg-red-400 w-[46px] h-[46px] rounded-full"
+        }
         alt=""
       />
       <div className="flex flex-col flex-grow">

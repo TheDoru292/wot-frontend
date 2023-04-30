@@ -18,6 +18,7 @@ import { useSelector } from "react-redux";
 import { deleteTweet } from "@/lib/actions";
 import Checkmark from "./Icons/Checkmark";
 import uniqid from "uniqid";
+import { isMobile } from "react-device-detect";
 
 const backendURL = "http://localhost:3000";
 
@@ -199,10 +200,10 @@ export default function Tweet({
       ref={tweetRef}
       className={
         !bar
-          ? "hover:bg-gray-200/5 relative border-b border-gray-700/75 w-full px-4 pt-3 pb-2 flex gap-3"
+          ? "hover:bg-gray-200/5 relative border-b border-gray-700/75 w-full px-4 pt-3 pb-2 flex gap-2"
           : reply
-          ? "hover:bg-gray-200/5 relative border-b border-gray-700/75 w-full px-4 pt-3 flex gap-3"
-          : "hover:bg-gray-200/5 relative flex gap-3 px-4 pt-3"
+          ? "hover:bg-gray-200/5 relative border-b border-gray-700/75 w-full px-4 pt-3 flex gap-2"
+          : "hover:bg-gray-200/5 relative flex gap-2 px-4 pt-3"
       }
     >
       {reply ? (
@@ -302,7 +303,11 @@ export default function Tweet({
               .replace(`"`, "")
               .replace(",", "")}
             alt="pfp"
-            className="w-[48px] h-[48px] rounded-full"
+            className={
+              !isMobile
+                ? "w-[48px] h-[48px] rounded-full"
+                : "w-[46px] h-[46px] rounded-full"
+            }
           />
         </Link>
         {bar ? (
@@ -318,7 +323,9 @@ export default function Tweet({
             href={`/user/${tweet?.user.handle}`}
             className="hover:underline"
           >
-            <p className="font-bold">{tweet.user.username}</p>
+            <p className="font-bold max-w-[70px] truncate">
+              {tweet.user.username}
+            </p>
           </Link>
           {tweet.user.verifiedCheckmark ? (
             <Checkmark className="w-[17px] h-[17px] self-center mt-[3px]" />
@@ -326,10 +333,12 @@ export default function Tweet({
             <></>
           )}
           <Link onClick={stop} href={`/user/${tweet?.user.handle}`}>
-            <p className="text-secondary">@{tweet.user.handle}</p>
+            <p className="max-w-[70px] truncate text-secondary">
+              @{tweet.user.handle}
+            </p>
           </Link>
           <span className="text-secondary">·</span>
-          <p className="text-secondary flex-grow">
+          <p className="text-secondary flex-grow truncate">
             {format(new Date(tweet.posted_on), "MMM dd")}
           </p>
           <Image
@@ -350,6 +359,7 @@ export default function Tweet({
               style={{
                 fontFamily: `ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"`,
               }}
+              className="whitespace-pre-wrap"
             >
               {tweet.content.split(" ").map((item) => {
                 if (item && item[0] != "#") {
@@ -373,7 +383,10 @@ export default function Tweet({
                 <p className="absolute bottom-0 mb-2 ml-2 px-1 rounded-md font-bold bg-black w-min-content h-min-content">
                   GIF
                 </p>
-                <img src={tweet.giphyUrl} className="rounded-xl" />
+                <img
+                  src={tweet.giphyUrl}
+                  className="rounded-xl w-full h-auto"
+                />
               </div>
             ) : (
               <></>

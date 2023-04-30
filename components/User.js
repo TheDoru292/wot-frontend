@@ -2,6 +2,7 @@ import { follow, unfollow } from "@/lib/actions";
 import Link from "next/link";
 import Checkmark from "./Icons/Checkmark";
 import { useState } from "react";
+import { isMobile } from "react-device-detect";
 
 export default function User({ user, following, currentUser, notLoggedIn }) {
   const [followingHover, setFollowingHover] = useState(false);
@@ -35,14 +36,30 @@ export default function User({ user, following, currentUser, notLoggedIn }) {
           <div className="flex">
             <div className="flex-grow">
               <div className="flex gap-1 items-center">
-                <p className="font-bold leading-5">{user.username}</p>
+                <p
+                  className={
+                    isMobile
+                      ? "font-bold max-w-[120px] truncate leading-5"
+                      : "font-bold truncate leading-5"
+                  }
+                >
+                  {user.username}
+                </p>
                 {user.verifiedCheckmark ? (
                   <Checkmark className="w-[17px] h-[17px] self-center mt-[3px]" />
                 ) : (
                   <></>
                 )}
               </div>
-              <p className="text-secondary">@{user.handle}</p>
+              <p
+                className={
+                  isMobile
+                    ? "text-secondary max-w-[120px] truncate"
+                    : "text-secondary truncate"
+                }
+              >
+                @{user.handle}
+              </p>
             </div>
             {notLoggedIn || currentUser.handle == user.handle ? (
               <></>

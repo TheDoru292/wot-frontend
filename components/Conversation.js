@@ -25,10 +25,7 @@ export default function Conversation({ conversation }) {
       socket.on("new-message", (data) => {
         console.log("New messsage", data);
 
-        const array = messages;
-        array.unshift(data);
-
-        setMessages(array);
+        setMessages((array) => [data, ...array]);
       });
     }
   }, [conversation]);

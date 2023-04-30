@@ -1,6 +1,8 @@
 import { formatDistanceToNow } from "date-fns";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { isMobile } from "react-device-detect";
+import { useRouter } from "next/router";
 
 export default function ConversationTabComponent({ setConv, conv }) {
   const [active, setActive] = useState(false);
@@ -15,15 +17,21 @@ export default function ConversationTabComponent({ setConv, conv }) {
     });
   }, []);
 
+  const router = useRouter();
+
   return (
     <div
       onClick={() => {
-        setConv({
-          id: conv.latestMessage.conversation,
-          user,
-          exists: true,
-        });
-        setActive(true);
+        if (!isMobile) {
+          setConv({
+            id: conv.latestMessage.conversation,
+            user,
+            exists: true,
+          });
+          setActive(true);
+        } else {
+          router.push(`/messages/${conv.latestMessage.conversation}`);
+        }
       }}
       className={
         active

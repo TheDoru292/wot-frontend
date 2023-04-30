@@ -2,6 +2,7 @@ import { editState } from "@/redux/auth/authActions";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useState } from "react";
+import { isMobile } from "react-device-detect";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function EditProfile({ userInfo, close }) {
@@ -32,7 +33,11 @@ export default function EditProfile({ userInfo, close }) {
           boxShadow: "0 0 0 50vmax rgba(91, 112, 131, 0.4)",
           transform: "translate(-50%, -50%)",
         }}
-        className="overflow-y-scroll w-[600px] max-h-[650px] h-full rounded-2xl absolute z-20 left-1/2 top-1/2 flex flex-col bg-black text-white"
+        className={
+          !isMobile
+            ? "overflow-y-scroll w-[600px] max-h-[650px] h-full rounded-2xl absolute z-20 left-1/2 top-1/2 flex flex-col bg-black text-white"
+            : "overflow-y-scroll max-h-[400px] w-full rounded-2xl absolute z-20 left-1/2 top-1/2 flex flex-col bg-black text-white"
+        }
       >
         <div
           style={{ backgroundColor: "rgb(0,0,0,0.65)" }}

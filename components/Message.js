@@ -1,6 +1,7 @@
 import format from "date-fns/format";
 import { useEffect, useRef, useState } from "react";
 import Copy from "./Icons/Copy";
+import { isMobile } from "react-device-detect";
 
 const backendURL = "http://localhost:3000";
 
@@ -93,7 +94,16 @@ export default function Message({ message, userInfo, conversationId }) {
             <></>
           )}
           <div
-            style={{ maxWidth: hover ? "388px" : "360px" }}
+            style={{
+              maxWidth:
+                hover && !isMobile
+                  ? "388px"
+                  : !hover && !isMobile
+                  ? "360px"
+                  : hover && isMobile
+                  ? "344px"
+                  : "316px",
+            }}
             className="relative text-[15px] leading-5 self-end flex flex-row gap-2 items-center"
           >
             <div className="flex flex-row self-end">

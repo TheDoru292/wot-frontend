@@ -2,6 +2,7 @@ import { formatDistanceToNow } from "date-fns";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import ConversationTabComponent from "./ConversationTabComponent";
+import { isMobile } from "react-device-detect";
 
 export default function ConversationTab({ setConv }) {
   const [conversations, setConversations] = useState([]);
@@ -29,10 +30,28 @@ export default function ConversationTab({ setConv }) {
   }, []);
 
   return (
-    <div className="w-[388px] flex flex-col min-h-screen border-r border-gray-700/75">
+    <div
+      className={
+        !isMobile
+          ? "w-[388px] flex flex-col min-h-screen border-r border-gray-700/75"
+          : "flex flex-col min-h-screen w-full"
+      }
+    >
       <div className="flex flex-col gap-4">
-        <div className="px-4 py-2">
-          <p className="text-lg font-bold">Messages</p>
+        <div className="px-3 py-2 flex gap-2 items-center">
+          {isMobile ? (
+            <img
+              src={userInfo.profile_picture_url
+                .replace(`"`, "")
+                .replace(",", "")}
+              className="bg-red-400 w-[30px] h-[30px] rounded-full"
+            />
+          ) : (
+            <></>
+          )}
+          <p className={!isMobile ? "text-lg font-bold" : "font-bold"}>
+            Messages
+          </p>
         </div>
         <div className="mx-4">
           <input

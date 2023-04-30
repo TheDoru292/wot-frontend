@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import Link from "next/link";
 import RsUser from "./RsUser";
+import { isMobile } from "react-device-detect";
 
 export default function RightSidebar({ openCreateAccount }) {
   const [tags, setTags] = useState([]);
@@ -35,21 +36,23 @@ export default function RightSidebar({ openCreateAccount }) {
   }, []);
 
   window.onscroll = () => {
-    let scrollTop = window.scrollY;
-    let viewportHeight = window.innerHeight;
-    let contentHeight = sidebar.current.getBoundingClientRect().height;
+    if (!isMobile) {
+      let scrollTop = window.scrollY;
+      let viewportHeight = window.innerHeight;
+      let contentHeight = sidebar.current.getBoundingClientRect().height;
 
-    if (tags.length <= 3) {
-      sidebar.current.style.position = "fixed";
-    } else {
-      if (scrollTop >= 105) {
+      if (tags.length <= 3) {
         sidebar.current.style.position = "fixed";
-        sidebar.current.style.transform = `translateY(-${
-          contentHeight - viewportHeight + 20
-        }px)`;
       } else {
-        sidebar.current.style.position = "";
-        sidebar.current.style.transform = "";
+        if (scrollTop >= 105) {
+          sidebar.current.style.position = "fixed";
+          sidebar.current.style.transform = `translateY(-${
+            contentHeight - viewportHeight + 20
+          }px)`;
+        } else {
+          sidebar.current.style.position = "";
+          sidebar.current.style.transform = "";
+        }
       }
     }
   };
