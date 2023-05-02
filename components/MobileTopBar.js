@@ -22,7 +22,9 @@ export default function MobileTopBar({ children, searchBar, open }) {
         >
           <img
             onClick={open}
-            src={userInfo.profile_picture_url.replace(`"`, "").replace(",", "")}
+            src={userInfo?.profile_picture_url
+              .replace(`"`, "")
+              .replace(",", "")}
             className="bg-red-400 w-[30px] h-[30px] rounded-full"
           />
         </div>

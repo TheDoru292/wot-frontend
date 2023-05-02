@@ -418,7 +418,7 @@ export default function Status({ notFound, tweet }) {
       </p>
       <div className="flex gap-3">
         <img
-          src={userInfo.profile_picture_url.replace(`"`, "").replace(",", "")}
+          src={userInfo?.profile_picture_url.replace(`"`, "").replace(",", "")}
           className="w-[48px] h-[48px] rounded-full"
           alt="pfp"
         />
@@ -633,7 +633,7 @@ export default function Status({ notFound, tweet }) {
         </div>
         <main className="flex flex-grow flex-col">
           {tweetInfo}
-          {replyDiv}
+          {userInfo ? replyDiv : <></>}
           {openTweetMenu && userInfo ? (
             <div
               ref={tweetMenu}
@@ -669,7 +669,7 @@ export default function Status({ notFound, tweet }) {
           ) : (
             <></>
           )}
-          {openMenu == true ? (
+          {openMenu && userInfo ? (
             <div
               ref={dropdownMenu}
               style={{ boxShadow: "0 0 3px #fff", top: "246px" }}
@@ -706,7 +706,46 @@ export default function Status({ notFound, tweet }) {
             )}
           </div>
         </main>
-        <MobileBottomBar />
+        {userInfo ? <MobileBottomBar /> : <></>}
+        {!userInfo ? (
+          <div className="sticky px-4 py-2 bottom-0 flex flex-col w-full bg-blue-500">
+            <div className="flex pb-2 flex-col flex-grow">
+              <p className="font-bold">Find out what's happening right now.</p>
+              <p>
+                With twitter you can quickly find out what's happening right
+                now.
+              </p>
+            </div>
+            <div className="flex">
+              <div className="flex-grow">
+                <button
+                  onClick={() => {
+                    setOpenLogin(true);
+                    document
+                      .querySelector("body")
+                      .classList.toggle("overflow-hidden");
+                  }}
+                  className=" bg-inherit border rounded-full h-9 w-[76px] font-bold"
+                >
+                  Log in
+                </button>
+              </div>
+              <button
+                onClick={() => {
+                  setOpenRegister(true);
+                  document
+                    .querySelector("body")
+                    .classList.toggle("overflow-hidden");
+                }}
+                className="justify-self-end bg-white text-black font-bold border rounded-full h-9 w-[132px]"
+              >
+                Create account
+              </button>
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
       </MobileView>
     </>
   );

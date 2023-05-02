@@ -266,7 +266,62 @@ export default function Explore() {
             <></>
           )}
         </main>
-        <MobileBottomBar />
+        {userInfo ? <MobileBottomBar /> : <></>}
+        {openLogin == true ? (
+          <Login
+            close={() => setOpenLogin(false)}
+            register={() => {
+              setOpenLogin(false);
+              setOpenRegister(true);
+            }}
+          />
+        ) : (
+          <></>
+        )}
+        {openRegister == true ? (
+          <Register close={() => setOpenRegister(false)} />
+        ) : (
+          <></>
+        )}
+        {!userInfo ? (
+          <div className="sticky px-4 py-2 bottom-0 flex flex-col w-full bg-blue-500">
+            <div className="flex pb-2 flex-col flex-grow">
+              <p className="font-bold">Find out what's happening right now.</p>
+              <p>
+                With twitter you can quickly find out what's happening right
+                now.
+              </p>
+            </div>
+            <div className="flex">
+              <div className="flex-grow">
+                <button
+                  onClick={() => {
+                    setOpenLogin(true);
+                    document
+                      .querySelector("body")
+                      .classList.toggle("overflow-hidden");
+                  }}
+                  className=" bg-inherit border rounded-full h-9 w-[76px] font-bold"
+                >
+                  Log in
+                </button>
+              </div>
+              <button
+                onClick={() => {
+                  setOpenRegister(true);
+                  document
+                    .querySelector("body")
+                    .classList.toggle("overflow-hidden");
+                }}
+                className="justify-self-end bg-white text-black font-bold border rounded-full h-9 w-[132px]"
+              >
+                Create account
+              </button>
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
       </MobileView>
     </>
   );

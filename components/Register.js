@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { isMobile } from "react-device-detect";
 
 export default function Register({ close }) {
   const [username, setUsername] = useState("");
@@ -41,7 +42,11 @@ export default function Register({ close }) {
           boxShadow: "0 0 0 50vmax rgba(91, 112, 131, 0.4)",
           transform: "translate(-50%, -50%)",
         }}
-        className="overflow-auto w-[600px] max-h-[650px] h-full rounded-2xl absolute z-20 left-1/2 top-1/2 flex flex flex-col gap-3 bg-black text-white"
+        className={
+          !isMobile
+            ? "overflow-y-scroll w-[600px] max-h-[650px] h-full rounded-2xl absolute z-20 left-1/2 top-1/2 flex flex-col bg-black text-white"
+            : "overflow-y-scroll max-h-[400px] w-full rounded-2xl absolute z-20 left-1/2 top-1/2 flex flex-col bg-black text-white"
+        }
       >
         <div className="flex gap-5 py-3">
           <img
@@ -57,7 +62,13 @@ export default function Register({ close }) {
           ></img>
           <p className="pt-[6px] font-bold">Create Account</p>
         </div>
-        <div className="flex flex-col px-24 gap-6 h-full">
+        <div
+          className={
+            !isMobile
+              ? "flex flex-col px-24 gap-6 h-full"
+              : "flex flex-col px-4 gap-6 h-full"
+          }
+        >
           <div>
             <p className="font-bold text-2xl">Create Account</p>
           </div>
