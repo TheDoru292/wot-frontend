@@ -25,7 +25,7 @@ export default function AllLikes({ close, tweetId }) {
           boxShadow: "0 0 0 50vmax rgba(91, 112, 131, 0.4)",
           transform: "translate(-50%, -50%)",
         }}
-        className="w-[600px] max-h-[650px] h-full rounded-2xl absolute left-1/2 top-1/2 flex flex flex-col gap-1 bg-black text-white"
+        className="w-[600px] max-h-[650px] h-full rounded-2xl absolute left-1/2 top-1/2 flex flex-col gap-1 bg-black text-white"
       >
         <div className="flex sticky top-[0.1px] backdrop-blur-xl rounded-t-2xl gap-5 pt-3 pb-1">
           <img
