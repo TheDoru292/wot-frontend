@@ -17,7 +17,6 @@ import Comment from "./Icons/Comment";
 import { useSelector } from "react-redux";
 import { deleteTweet } from "@/lib/actions";
 import Checkmark from "./Icons/Checkmark";
-import uniqid from "uniqid";
 import { isMobile } from "react-device-detect";
 
 const backendURL = "http://localhost:3000";
@@ -221,6 +220,7 @@ export default function Tweet({
             <button
               onClick={(e) => {
                 e.stopPropagation();
+                e.preventDefault();
                 deleteTwt();
               }}
               className="flex gap-2 px-4 py-2 hover:bg-stone-700/20 w-full text-start"
@@ -232,6 +232,7 @@ export default function Tweet({
             <button
               onClick={(e) => {
                 e.stopPropagation();
+                e.preventDefault();
                 handleFollow();
               }}
               className="flex gap-2 px-4 py-2 hover:bg-stone-700/20 w-full text-start"
@@ -243,6 +244,7 @@ export default function Tweet({
             <button
               onClick={(e) => {
                 e.stopPropagation();
+                e.preventDefault();
                 handleUnfollow();
               }}
               className="flex gap-2 px-4 py-2 hover:bg-stone-700/20 w-full text-start"
@@ -262,7 +264,11 @@ export default function Tweet({
           className="absolute flex flex-col rounded-lg top-20 right-0 z-10 justify-start items-start mr-4 bg-black"
         >
           <button
-            onClick={copyLink}
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              copyLink();
+            }}
             className="flex px-4 py-2 w-full hover:bg-stone-700/20 gap-2"
           >
             <Image src="/link-variant.svg" width={28} height={28} />
@@ -270,7 +276,11 @@ export default function Tweet({
           </button>
           {!bookmarked && userInfo ? (
             <button
-              onClick={addBookmark}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                addBookmark();
+              }}
               className="flex gap-2 px-4 py-2 hover:bg-stone-700/20 w-full text-start"
             >
               <Image src="/bookmark-plus.svg" width={28} height={28} />
@@ -278,7 +288,11 @@ export default function Tweet({
             </button>
           ) : bookmarked && userInfo ? (
             <button
-              onClick={removeBookmarkA}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                removeBookmarkA();
+              }}
               className="flex gap-2 px-4 py-2 hover:bg-stone-700/20 w-full text-start"
             >
               <Image src="/bookmark-off.svg" width={28} height={28} />
@@ -449,6 +463,7 @@ export default function Tweet({
             width={12}
             onClick={(e) => {
               e.stopPropagation();
+              e.preventDefault();
               openMenu == false ? setOpenMenu(true) : setOpenMenu(false);
             }}
             className="cursor-pointer flex-grow flex-basis h-6 w-6 rounded-full"

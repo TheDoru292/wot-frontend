@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import { BrowserView, MobileView } from "react-device-detect";
 import MobileTopBar from "@/components/MobileTopBar";
 import MobileBottomBar from "@/components/MobileBottomBar";
+import MobileUserBar from "@/components/MobileUserBar";
 
 const backendURL = "http://localhost:3000";
 
@@ -22,6 +23,7 @@ export default function Explore() {
   const [tweets, setTweets] = useState([]);
   const [pageDetails, setPageDetails] = useState([]);
   const [tags, setTags] = useState([]);
+  const [openUserBar, setOpenUserBar] = useState(false);
   const [search, setSearch] = useState("");
 
   const router = useRouter();
@@ -207,7 +209,22 @@ export default function Explore() {
         </div>
       </BrowserView>
       <MobileView className="bg-black min-h-screen text-white flex flex-col max-w-screen">
-        <MobileTopBar />
+        {openUserBar ? (
+          <MobileUserBar
+            openUserBar={openUserBar}
+            close={() => {
+              setOpenUserBar(false);
+            }}
+          />
+        ) : (
+          <></>
+        )}
+        <MobileTopBar
+          open={(e) => {
+            e.stopPropagation();
+            setOpenUserBar(true);
+          }}
+        />
         <main className="flex-grow">
           <div className="flex flex-col border-b pt-2 border-gray-700/75">
             <h2 className="px-4 text-lg font-bold">Trending tags</h2>

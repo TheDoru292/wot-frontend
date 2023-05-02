@@ -136,7 +136,11 @@ export default function Search() {
           searchFunc();
         }
       }}
-      className="h-[44px] w-full bg-[#202327] outline-none rounded-full px-4"
+      className={
+        isMobile
+          ? "h-[25px] w-full bg-[#202327] outline-none rounded-full px-4"
+          : "h-[44px] w-full bg-[#202327] outline-none rounded-full px-4"
+      }
     />
   );
 

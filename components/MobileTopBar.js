@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
-export default function MobileTopBar({ children, searchBar }) {
+export default function MobileTopBar({ children, searchBar, open }) {
   const [search, setSearch] = useState("");
   const { userInfo } = useSelector((state) => state.auth);
   const router = useRouter();
@@ -12,15 +12,16 @@ export default function MobileTopBar({ children, searchBar }) {
       style={{ backgroundColor: "rgba(0, 0, 0, .60)" }}
       className="z-[10] sticky top-0 flex flex-col gap-1 backdrop-blur-md border-b border-gray-700/75"
     >
-      <div className="flex w-full px-3 pt-2">
+      <div className="flex w-full px-3 pt-2 pb-1 items-center ">
         <div
           className={
-            router.pathname == "/index"
+            router.pathname == "/"
               ? "flex-grow flex-basis w-[30px] h-[30px]"
               : "w-[30px] h-[30px]"
           }
         >
           <img
+            onClick={open}
             src={userInfo.profile_picture_url.replace(`"`, "").replace(",", "")}
             className="bg-red-400 w-[30px] h-[30px] rounded-full"
           />

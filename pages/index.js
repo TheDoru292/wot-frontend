@@ -12,6 +12,7 @@ import { BrowserView, MobileView } from "react-device-detect";
 import Link from "next/link";
 import MobileBottomBar from "@/components/MobileBottomBar";
 import MobileTopBar from "@/components/MobileTopBar";
+import MobileUserBar from "@/components/MobileUserBar";
 
 const backendURL = "http://localhost:3000";
 
@@ -23,6 +24,7 @@ export default function Home() {
   const [gifId, setGifId] = useState("");
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState("forYou");
+  const [openUserBar, setOpenUserBar] = useState(false);
   const router = useRouter();
 
   async function fetchTweets() {
@@ -261,8 +263,24 @@ export default function Home() {
           <RightSidebar />
         </div>
       </BrowserView>
-      <MobileView className="bg-black min-h-screen text-white flex flex-col max-w-screen">
-        <MobileTopBar children={selectButtons} />
+      <MobileView className="relative bg-black min-h-screen text-white flex flex-col max-w-screen">
+        {openUserBar ? (
+          <MobileUserBar
+            openUserBar={openUserBar}
+            close={() => {
+              setOpenUserBar(false);
+            }}
+          />
+        ) : (
+          <></>
+        )}
+        <MobileTopBar
+          children={selectButtons}
+          open={(e) => {
+            e.stopPropagation();
+            setOpenUserBar(true);
+          }}
+        />
         <main className="flex-grow">
           <PostTweet
             changeArray={addToArray}

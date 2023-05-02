@@ -6,12 +6,14 @@ import { useSelector } from "react-redux";
 import { format, formatDistance } from "date-fns";
 import { BrowserView, MobileView } from "react-device-detect";
 import MobileBottomBar from "@/components/MobileBottomBar";
+import MobileUserBar from "@/components/MobileUserBar";
 
 const backendURL = "http://localhost:3000";
 
 export default function Notifications() {
   const [notifications, setNotifications] = useState([]);
   const [filteredNotifications, setFilteredNotifications] = useState([]);
+  const [openUserBar, setOpenUserBar] = useState(false);
   const { userInfo } = useSelector((state) => state.auth);
 
   useEffect(() => {
@@ -105,8 +107,22 @@ export default function Notifications() {
         </div>
       </BrowserView>
       <MobileView className="bg-black min-h-screen text-white flex flex-col max-w-screen">
+        {openUserBar ? (
+          <MobileUserBar
+            openUserBar={openUserBar}
+            close={() => {
+              setOpenUserBar(false);
+            }}
+          />
+        ) : (
+          <></>
+        )}
         <div className="sticky top-[0.1px] gap-2 flex items-center px-2 backdrop-blur-md">
           <img
+            onClick={(e) => {
+              e.stopPropagation();
+              setOpenUserBar(true);
+            }}
             src={userInfo.profile_picture_url.replace(`"`, "").replace(",", "")}
             className="bg-red-400 w-[30px] h-[30px] rounded-full"
           />

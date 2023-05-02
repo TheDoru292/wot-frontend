@@ -634,6 +634,68 @@ export default function Status({ notFound, tweet }) {
         <main className="flex flex-grow flex-col">
           {tweetInfo}
           {replyDiv}
+          {openTweetMenu && userInfo ? (
+            <div
+              ref={tweetMenu}
+              style={{ boxShadow: "0 0 3px #fff" }}
+              className="absolute flex flex-col top-[67px] rounded-lg right-0 z-10 justify-start items-start mr-4 bg-black"
+            >
+              {tweet.tweet.user.handle == userInfo.handle ? (
+                <button
+                  onClick={deleteTwt}
+                  className="flex gap-2 px-4 py-2 hover:bg-stone-700/20 w-full text-start"
+                >
+                  <Image src="/delete.svg" width={28} height={28} />
+                  <p className="font-bold text-[#b81823]">Delete</p>
+                </button>
+              ) : following == false ? (
+                <button
+                  onClick={handleFollow}
+                  className="flex gap-2 px-4 py-2 hover:bg-stone-700/20 w-full text-start"
+                >
+                  <Image src="/account-plus.svg" width={28} height={28} />
+                  <p>Follow @{tweet.tweet.user.handle}</p>
+                </button>
+              ) : (
+                <button
+                  onClick={handleUnfollow}
+                  className="flex gap-2 px-4 py-2 hover:bg-stone-700/20 w-full text-start"
+                >
+                  <Image src="/account-remove.svg" width={28} height={28} />
+                  <p>Unfollow @{tweet.tweet.user.handle}</p>
+                </button>
+              )}
+            </div>
+          ) : (
+            <></>
+          )}
+          {openMenu == true ? (
+            <div
+              ref={dropdownMenu}
+              style={{ boxShadow: "0 0 3px #fff", top: "246px" }}
+              className="absolute flex flex-col rounded-lg right-0 z-10 justify-start items-start mr-4 bg-black"
+            >
+              {bookmarked == false ? (
+                <button
+                  onClick={handleBookmark}
+                  className="flex gap-2 px-4 py-2 hover:bg-stone-700/20 w-full text-start"
+                >
+                  <Image src="/bookmark-plus.svg" width={28} height={28} />
+                  <p>Bookmark</p>
+                </button>
+              ) : (
+                <button
+                  onClick={handleBookmark}
+                  className="flex gap-2 px-4 py-2 hover:bg-stone-700/20 w-full text-start"
+                >
+                  <Image src="/bookmark-off.svg" width={28} height={28} />
+                  <p>Remove Tweet from Bookmarks</p>
+                </button>
+              )}
+            </div>
+          ) : (
+            <></>
+          )}
           <div>
             {replies.length != 0 ? (
               replies.map((item) => {

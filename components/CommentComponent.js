@@ -61,8 +61,6 @@ export default function CommentComp({ comment }) {
     ) {
       setOpenCommentMenu(false);
     }
-
-    console.log("a");
   }
 
   document.addEventListener("click", closeOpenMenu);
