@@ -58,7 +58,7 @@ export default function RightSidebar({ openCreateAccount }) {
   };
 
   return (
-    <div className="overflow-hidden min-h-screen flex w-[540px] pt-2 border-l border-gray-700/75">
+    <div className="hidden lg:flex overflow-hidden min-h-screen w-[540px] pt-2">
       <div ref={sidebar} className="flex gap-4 flex-col ml-6 w-[360px]">
         {router.pathname == "/explore" || router.pathname == "/search" ? (
           <></>

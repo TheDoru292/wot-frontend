@@ -77,10 +77,12 @@ export default function LeftSidebar() {
 
   if (userInfo) {
     return (
-      <div className="overflow-y-auto sticky top-0 h-screen justify-end flex w-[405px] border-r border-gray-700/75">
-        <div className="flex gap-5 flex-col w-[260px]">
-          <div className="ml-2 mt-3 bg-red-400 w-10 h-10 rounded-full"></div>
-          <div className="flex flex-grow flex-col gap-2">
+      <div className="overflow-y-auto sticky top-0 h-screen justify-end flex w-[100px] sm:w-[200px] 2xl:w-[405px] border-r border-gray-700/75">
+        <div className="flex gap-5 flex-col w-[245px] mr-3">
+          <div className="flex w-full justify-end 2xl:justify-start px-[6px] sm:px-[6px] sm:px-0">
+            <div className="sm:self-start self-center self-end sm:ml-2 mt-3 bg-red-400 w-10 h-10 rounded-full"></div>
+          </div>
+          <div className="flex flex-grow 2xl:items-start items-end flex-col gap-2">
             {list.map((item) => {
               if (!userInfo && item.showIfNotLogged == false) {
               } else {
@@ -98,9 +100,11 @@ export default function LeftSidebar() {
                       className="w-8 h-8"
                     ></Image>
                     {item.active == false ? (
-                      <p className="text-lg">{item.name}</p>
+                      <p className="2xl:block hidden text-lg">{item.name}</p>
                     ) : (
-                      <p className="text-lg font-black">{item.name}</p>
+                      <p className="2xl:block hidden text-lg font-black">
+                        {item.name}
+                      </p>
                     )}
                   </Link>
                 );
@@ -109,7 +113,7 @@ export default function LeftSidebar() {
             {!userInfo ? (
               <></>
             ) : (
-              <div className="mr-14">
+              <div className="mr-14 2xl:flex hidden w-full">
                 <button
                   disabled={true}
                   title="Tweeting with this button is disabled at this time, please use the home page instead."
@@ -124,7 +128,7 @@ export default function LeftSidebar() {
             <div
               ref={menuRef}
               style={{ boxShadow: "0 0 3px #fff" }}
-              className="flex rounded-lg mr-3"
+              className="flex rounded-lg fixed bottom-[64px] bg-black 2xl:bottom-[76px]"
             >
               <Link href={"/logout"} className="w-full hover:bg-stone-700/20">
                 <button className="font-bold px-4 py-2">
@@ -146,16 +150,16 @@ export default function LeftSidebar() {
                   setOpenMenu(false);
                 }
               }}
-              className="cursor-pointer pl-2 flex mb-3 pr-3 mr-2 pt-1 pb-1 gap-2 rounded-full hover:bg-stone-900"
+              className="2xl:w-full cursor-pointer flex 2xl:self-start px-[2px] self-end sm:self-end mb-3 2xl:pr-3 2xl:pl-2 pt-1 sm:pb-1 gap-2 rounded-full 2xl:hover:bg-stone-900"
             >
               <img
                 src={userInfo.profile_picture_url
                   .replace(`"`, "")
                   .replace(",", "")}
-                className="self-center bg-red-400 w-11 h-11 rounded-full"
+                className="justify-self-center sm:self-center bg-red-400 w-11 h-11 rounded-full"
                 alt=""
               />
-              <div className="flex flex-grow flex-col">
+              <div className="2xl:flex hidden flex-grow flex-col">
                 <div className="flex gap-1 items-center">
                   <p className="font-bold">{userInfo.username}</p>
                   {userInfo.verifiedCheckmark ? (
@@ -166,7 +170,7 @@ export default function LeftSidebar() {
                 </div>
                 <p className="text-secondary">@{userInfo.handle}</p>
               </div>
-              <div className="self-center">
+              <div className="self-center 2xl:block hidden">
                 <Menu fill="#fff" />
               </div>
             </div>

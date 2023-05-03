@@ -86,7 +86,7 @@ export default function Explore() {
           </Head>
           <div className="flex">
             <LeftSidebar />
-            <main className="flex max-w-[575px] flex-grow flex-col">
+            <main className="flex max-w-[575px] flex-grow flex-col border-r border-gray-700/75">
               <div className="sticky top-0 backdrop-blur-md z-[999] px-4 py-[5px]">
                 <input
                   type="text"

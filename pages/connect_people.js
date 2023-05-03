@@ -31,7 +31,7 @@ export default function Connect() {
             <title>Connect / Wut</title>
           </Head>
           <LeftSidebar />
-          <main className="flex max-w-[575px] flex-grow flex-col">
+          <main className="flex max-w-[575px] flex-grow flex-col border-r border-gray-700/75">
             <div
               style={{ backgroundColor: "rgba(0,0,0,0.65)" }}
               className="w-full sticky flex flex-col top-[0.1px] backdrop-blur-xl pt-1 flex gap-1"

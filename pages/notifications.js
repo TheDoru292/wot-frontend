@@ -52,7 +52,7 @@ export default function Notifications() {
       <BrowserView>
         <div className="bg-black flex min-h-screen text-gray-200">
           <LeftSidebar />
-          <main className="flex max-w-[575px] flex-grow flex-col">
+          <main className="flex max-w-[575px] flex-grow flex-col border-r border-gray-700/75">
             <div className="sticky top-[0.1px] flex flex-col backdrop-blur-md">
               <h1 className="py-3 pl-4 text-lg font-bold">Notifications</h1>
             </div>
