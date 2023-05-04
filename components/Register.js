@@ -22,6 +22,14 @@ export default function Register({ close }) {
     }
   }, [success, userInfo]);
 
+  useEffect(() => {
+    document.querySelector("body").classList.toggle("overflow-hidden");
+
+    return () => {
+      document.querySelector("body").classList.toggle("overflow-hidden");
+    };
+  }, []);
+
   function register(e) {
     e.preventDefault();
 
@@ -44,19 +52,14 @@ export default function Register({ close }) {
         }}
         className={
           !isMobile
-            ? "overflow-y-scroll w-[600px] max-h-[650px] h-full rounded-2xl absolute z-20 left-1/2 top-1/2 flex flex-col bg-black text-white"
+            ? "overflow-y-auto sm:w-[600px] w-full max-h-[650px] h-full rounded-2xl absolute z-20 left-1/2 top-1/2 flex flex-col bg-black text-white"
             : "overflow-y-scroll max-h-[400px] w-full rounded-2xl absolute z-20 left-1/2 top-1/2 flex flex-col bg-black text-white"
         }
       >
         <div className="flex gap-5 py-3">
           <img
-            onClick={() => {
-              close();
-              document
-                .querySelector("body")
-                .classList.toggle("overflow-hidden");
-            }}
-            src="close.svg"
+            onClick={close}
+            src="/close.svg"
             className="pl-5 h-10 w-10 cursor-pointer"
             alt="close"
           ></img>
