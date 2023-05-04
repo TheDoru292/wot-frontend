@@ -130,11 +130,15 @@ export default function UserProfile({ user }) {
   }
 
   async function handleFollow() {
-    const data = await follow(user.user.handle);
+    if (userInfo) {
+      const data = await follow(user.user.handle);
 
-    if (data.success == true) {
-      setFollowers((count) => count + 1);
-      setFollowing(true);
+      if (data.success == true) {
+        setFollowers((count) => count + 1);
+        setFollowing(true);
+      }
+    } else {
+      setOpenLogin(true);
     }
   }
 
