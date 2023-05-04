@@ -1,5 +1,6 @@
 import LeftSidebar from "@/components/LeftSidebar";
 import MobileBottomBar from "@/components/MobileBottomBar";
+import NotLoggedInModal from "@/components/NotLoggedInModal";
 import RightSidebar from "@/components/RightSidebar";
 import User from "@/components/User";
 import { getUsersFollowing } from "@/lib/actions";
@@ -8,6 +9,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { BrowserView, MobileView } from "react-device-detect";
 import { useSelector } from "react-redux";
+import Login from "@/components/Login";
+import Register from "@/components/Register";
 
 export async function getServerSideProps({ params }) {
   const user = await fetch(`http://localhost:3000/api/user/${params.id}`, {
@@ -24,6 +27,8 @@ export async function getServerSideProps({ params }) {
 }
 
 export default function Following({ user }) {
+  const [openLogin, setOpenLogin] = useState(false);
+  const [openRegister, setOpenRegister] = useState(false);
   const [users, setUsers] = useState([]);
   const { userInfo } = useSelector((state) => state.auth);
 
@@ -106,7 +111,31 @@ export default function Following({ user }) {
             </div>
           </main>
           <RightSidebar />
+          {openLogin == true ? (
+            <Login
+              close={() => setOpenLogin(false)}
+              register={() => {
+                setOpenLogin(false);
+                setOpenRegister(true);
+              }}
+            />
+          ) : (
+            <></>
+          )}
+          {openRegister == true ? (
+            <Register close={() => setOpenRegister(false)} />
+          ) : (
+            <></>
+          )}
         </div>
+        {!userInfo ? (
+          <NotLoggedInModal
+            loginFunc={() => setOpenLogin(true)}
+            registerFunc={() => setOpenRegister(true)}
+          />
+        ) : (
+          <></>
+        )}
       </BrowserView>
       <MobileView className="bg-black min-h-screen text-white flex flex-col max-w-screen">
         <div

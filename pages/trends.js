@@ -6,9 +6,12 @@ import { useEffect, useState } from "react";
 import { getTagsFromBackend } from "@/lib/actions";
 import { BrowserView, MobileView } from "react-device-detect";
 import MobileBottomBar from "@/components/MobileBottomBar";
+import NotLoggedInModal from "@/components/NotLoggedInModal";
+import { useSelector } from "react-redux";
 
 export default function Trends() {
   const [tags, setTags] = useState([]);
+  const { userInfo } = useSelector((state) => state.auth);
 
   useEffect(() => {
     async function getTags() {
@@ -65,6 +68,14 @@ export default function Trends() {
           </main>
           <RightSidebar />
         </div>
+        {!userInfo ? (
+          <NotLoggedInModal
+            loginFunc={() => setOpenLogin(true)}
+            registerFunc={() => setOpenRegister(true)}
+          />
+        ) : (
+          <></>
+        )}
       </BrowserView>
       <MobileView className="bg-black min-h-screen text-white flex flex-col max-w-screen">
         <div className="sticky top-[0.1px] flex px-4 py-1 gap-6 backdrop-blur-md">

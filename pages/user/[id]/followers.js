@@ -8,6 +8,9 @@ import { useSelector } from "react-redux";
 import { getUsersFollowers } from "@/lib/actions";
 import { BrowserView, MobileView, isMobile } from "react-device-detect";
 import MobileBottomBar from "@/components/MobileBottomBar";
+import NotLoggedInModal from "@/components/NotLoggedInModal";
+import Login from "@/components/Login";
+import Register from "@/components/Register";
 
 export async function getServerSideProps({ params }) {
   const user = await fetch(`http://localhost:3000/api/user/${params.id}`, {
@@ -24,6 +27,8 @@ export async function getServerSideProps({ params }) {
 }
 
 export default function Follower({ user }) {
+  const [openLogin, setOpenLogin] = useState(false);
+  const [openRegister, setOpenRegister] = useState(false);
   const [users, setUsers] = useState([]);
   const { userInfo } = useSelector((state) => state.auth);
 
@@ -108,7 +113,31 @@ export default function Follower({ user }) {
             </div>
           </main>
           <RightSidebar />
+          {openLogin == true ? (
+            <Login
+              close={() => setOpenLogin(false)}
+              register={() => {
+                setOpenLogin(false);
+                setOpenRegister(true);
+              }}
+            />
+          ) : (
+            <></>
+          )}
+          {openRegister == true ? (
+            <Register close={() => setOpenRegister(false)} />
+          ) : (
+            <></>
+          )}
         </div>
+        {!userInfo ? (
+          <NotLoggedInModal
+            loginFunc={() => setOpenLogin(true)}
+            registerFunc={() => setOpenRegister(true)}
+          />
+        ) : (
+          <></>
+        )}
       </BrowserView>
       <MobileView className="bg-black min-h-screen text-white flex flex-col max-w-screen">
         <div

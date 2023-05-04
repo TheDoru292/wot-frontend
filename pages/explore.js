@@ -13,6 +13,7 @@ import { BrowserView, MobileView } from "react-device-detect";
 import MobileTopBar from "@/components/MobileTopBar";
 import MobileBottomBar from "@/components/MobileBottomBar";
 import MobileUserBar from "@/components/MobileUserBar";
+import NotLoggedInModal from "@/components/NotLoggedInModal";
 
 const backendURL = "http://localhost:3000";
 
@@ -150,42 +151,10 @@ export default function Explore() {
             <RightSidebar openCreateAccount={() => setOpenRegister(true)} />
           </div>
           {!userInfo ? (
-            <div className="sticky h-[66px] py-2 bottom-0 flex w-full bg-blue-500">
-              <div className="w-[405px]"></div>
-              <div className="flex flex-col flex-grow">
-                <p className="font-bold text-lg">
-                  Find out what's happening right now.
-                </p>
-                <p>
-                  With twitter you can quickly find out what's happening right
-                  now.
-                </p>
-              </div>
-              <div className="flex items-center gap-4 w-[540px] justify-center">
-                <button
-                  onClick={() => {
-                    setOpenLogin(true);
-                    document
-                      .querySelector("body")
-                      .classList.toggle("overflow-hidden");
-                  }}
-                  className="bg-inherit border rounded-full h-9 w-[76px] font-bold"
-                >
-                  Log in
-                </button>
-                <button
-                  onClick={() => {
-                    setOpenRegister(true);
-                    document
-                      .querySelector("body")
-                      .classList.toggle("overflow-hidden");
-                  }}
-                  className="bg-white text-black font-bold border rounded-full h-9 w-[132px]"
-                >
-                  Create account
-                </button>
-              </div>
-            </div>
+            <NotLoggedInModal
+              loginFunc={() => setOpenLogin(true)}
+              registerFunc={() => setOpenRegister(true)}
+            />
           ) : (
             <></>
           )}

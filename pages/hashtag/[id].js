@@ -1,12 +1,15 @@
 import LeftSidebar from "@/components/LeftSidebar";
 import MobileBottomBar from "@/components/MobileBottomBar";
 import MobileTopBar from "@/components/MobileTopBar";
+import NotLoggedInModal from "@/components/NotLoggedInModal";
 import RightSidebar from "@/components/RightSidebar";
 import Tweet from "@/components/Tweet";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { BrowserView, MobileView } from "react-device-detect";
 import { useSelector } from "react-redux";
+import Login from "@/components/Login";
+import Register from "@/components/Register";
 
 export async function getServerSideProps(context) {
   return {
@@ -17,6 +20,8 @@ export async function getServerSideProps(context) {
 }
 
 export default function Hashtag({ params }) {
+  const [openLogin, setOpenLogin] = useState(false);
+  const [openRegister, setOpenRegister] = useState(false);
   const [tweets, setTweets] = useState([]);
   const [loading, setLoading] = useState(true);
   const { userInfo } = useSelector((state) => state.auth);
@@ -73,44 +78,28 @@ export default function Hashtag({ params }) {
             )}
           </main>
           <RightSidebar />
+          {openLogin == true ? (
+            <Login
+              close={() => setOpenLogin(false)}
+              register={() => {
+                setOpenLogin(false);
+                setOpenRegister(true);
+              }}
+            />
+          ) : (
+            <></>
+          )}
+          {openRegister == true ? (
+            <Register close={() => setOpenRegister(false)} />
+          ) : (
+            <></>
+          )}
         </div>
         {!userInfo ? (
-          <div className="sticky h-[66px] text-white py-2 bottom-0 flex w-full bg-blue-500">
-            <div className="w-[405px]"></div>
-            <div className="flex flex-col flex-grow">
-              <p className="font-bold text-lg">
-                Find out what's happening right now.
-              </p>
-              <p>
-                With twitter you can quickly find out what's happening right
-                now.
-              </p>
-            </div>
-            <div className="flex items-center gap-4 w-[540px] justify-center">
-              <button
-                onClick={() => {
-                  setOpenLogin(true);
-                  document
-                    .querySelector("body")
-                    .classList.toggle("overflow-hidden");
-                }}
-                className="bg-inherit border rounded-full h-9 w-[76px] font-bold"
-              >
-                Log in
-              </button>
-              <button
-                onClick={() => {
-                  setOpenRegister(true);
-                  document
-                    .querySelector("body")
-                    .classList.toggle("overflow-hidden");
-                }}
-                className="bg-white text-black font-bold border rounded-full h-9 w-[132px]"
-              >
-                Create account
-              </button>
-            </div>
-          </div>
+          <NotLoggedInModal
+            loginFunc={() => setOpenLogin(true)}
+            registerFunc={() => setOpenRegister(true)}
+          />
         ) : (
           <></>
         )}

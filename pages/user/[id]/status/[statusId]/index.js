@@ -27,6 +27,9 @@ import AllRetweets from "@/components/AllRetweets";
 import { useRouter } from "next/router";
 import { BrowserView, MobileView, isMobile } from "react-device-detect";
 import MobileBottomBar from "@/components/MobileBottomBar";
+import NotLoggedInModal from "@/components/NotLoggedInModal";
+import Login from "@/components/Login";
+import Register from "@/components/Register";
 
 const backendURL = "http://localhost:3000";
 
@@ -75,6 +78,8 @@ export default function Status({ notFound, tweet }) {
   const [openTweetMenu, setOpenTweetMenu] = useState(false);
   const [showLikesDiv, setShowLikesDiv] = useState(false);
   const [showRetweetDiv, setShowRetweetDiv] = useState(false);
+  const [openLogin, setOpenLogin] = useState(false);
+  const [openRegister, setOpenRegister] = useState(false);
 
   const { userInfo } = useSelector((state) => state.auth);
   const dropdownMenu = useRef(null);
@@ -571,44 +576,28 @@ export default function Status({ notFound, tweet }) {
             </div>
           </main>
           <RightSidebar />
+          {openLogin == true ? (
+            <Login
+              close={() => setOpenLogin(false)}
+              register={() => {
+                setOpenLogin(false);
+                setOpenRegister(true);
+              }}
+            />
+          ) : (
+            <></>
+          )}
+          {openRegister == true ? (
+            <Register close={() => setOpenRegister(false)} />
+          ) : (
+            <></>
+          )}
         </div>
         {!userInfo ? (
-          <div className="sticky h-[66px] text-white py-2 bottom-0 flex w-full bg-blue-500">
-            <div className="w-[405px]"></div>
-            <div className="flex flex-col flex-grow">
-              <p className="font-bold text-lg">
-                Find out what's happening right now.
-              </p>
-              <p>
-                With twitter you can quickly find out what's happening right
-                now.
-              </p>
-            </div>
-            <div className="flex items-center gap-4 w-[540px] justify-center">
-              <button
-                onClick={() => {
-                  setOpenLogin(true);
-                  document
-                    .querySelector("body")
-                    .classList.toggle("overflow-hidden");
-                }}
-                className="bg-inherit border rounded-full h-9 w-[76px] font-bold"
-              >
-                Log in
-              </button>
-              <button
-                onClick={() => {
-                  setOpenRegister(true);
-                  document
-                    .querySelector("body")
-                    .classList.toggle("overflow-hidden");
-                }}
-                className="bg-white text-black font-bold border rounded-full h-9 w-[132px]"
-              >
-                Create account
-              </button>
-            </div>
-          </div>
+          <NotLoggedInModal
+            loginFunc={() => setOpenLogin(true)}
+            registerFunc={() => setOpenRegister(true)}
+          />
         ) : (
           <></>
         )}
