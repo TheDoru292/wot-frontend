@@ -43,7 +43,7 @@ export default function Conversation({ conversation }) {
       }
     ).then((res) => res.json());
 
-    setMessages(data.messages.docs);
+    setMessages(data.messages ? data.messages.docs : []);
     setMessagePages(data.messages);
     setFetched(true);
   }

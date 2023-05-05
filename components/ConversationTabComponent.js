@@ -24,7 +24,7 @@ export default function ConversationTabComponent({ setConv, conv }) {
       onClick={() => {
         if (!isMobile) {
           setConv({
-            id: conv.latestMessage.conversation,
+            id: conv._id,
             user,
             exists: true,
           });
@@ -48,18 +48,24 @@ export default function ConversationTabComponent({ setConv, conv }) {
           <span className="font-bold">{user?.username} </span>
           <span className="text-secondary">@{user?.handle} · </span>
           <span className="text-secondary">
-            {formatDistanceToNow(new Date(conv.latestMessage.timestamp), {
-              addSuffix: false,
-            })}
+            {conv.latestMessage
+              ? formatDistanceToNow(new Date(conv.latestMessage.timestamp), {
+                  addSuffix: false,
+                })
+              : "-"}
           </span>
         </p>
-        <p>
-          {conv.latestMessage.message != "" ? (
-            conv.latestMessage.message
-          ) : (
-            <span className="text-secondary">Message deleted</span>
-          )}
-        </p>
+        {conv.latestMessage ? (
+          <p>
+            {conv.latestMessage.message != "" ? (
+              conv.latestMessage.message
+            ) : (
+              <span className="text-secondary">Message deleted</span>
+            )}
+          </p>
+        ) : (
+          <p className="text-secondary">No message yet</p>
+        )}
       </div>
     </div>
   );
