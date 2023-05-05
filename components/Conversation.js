@@ -6,7 +6,7 @@ import Message from "./Message";
 
 const backendURL = `http://localhost:3000`;
 
-export default function Conversation({ conversation }) {
+export default function Conversation({ conversation, messageSentFunc }) {
   const [messages, setMessages] = useState([]);
   const [messagePages, setMessagePages] = useState({});
   const [fetched, setFetched] = useState(false);
@@ -23,9 +23,9 @@ export default function Conversation({ conversation }) {
       socket.emit("join", conversation.id);
 
       socket.on("new-message", (data) => {
-        console.log("New messsage", data);
-
         setMessages((array) => [data, ...array]);
+
+        messageSentFunc(data);
       });
     }
   }, [conversation]);
@@ -72,8 +72,6 @@ export default function Conversation({ conversation }) {
   }
 
   const textRef = useRef(null);
-
-  console.log(messages);
 
   return (
     <>

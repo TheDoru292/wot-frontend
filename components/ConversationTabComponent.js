@@ -4,8 +4,11 @@ import { useSelector } from "react-redux";
 import { isMobile } from "react-device-detect";
 import { useRouter } from "next/router";
 
-export default function ConversationTabComponent({ setConv, conv }) {
-  const [active, setActive] = useState(false);
+export default function ConversationTabComponent({
+  setConv,
+  conv,
+  setActiveItem,
+}) {
   const { userInfo } = useSelector((state) => state.auth);
   const [user, setUser] = useState({ profile_picture_url: "" });
 
@@ -28,13 +31,13 @@ export default function ConversationTabComponent({ setConv, conv }) {
             user,
             exists: true,
           });
-          setActive(true);
         } else {
           router.push(`/messages/${conv.latestMessage.conversation}`);
         }
+        setActiveItem(conv._id);
       }}
       className={
-        active
+        conv.active
           ? "flex p-4 gap-3 bg-gray-100/5 hover:bg-gray-100/10 cursor-pointer"
           : "flex p-4 gap-3 hover:bg-gray-200/5 cursor-pointer"
       }
