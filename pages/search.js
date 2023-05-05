@@ -31,9 +31,9 @@ export default function Search() {
   useEffect(() => {
     if (router.query.q) {
       setSearch(router.query.q);
-      searchFunc();
+      searchFunc(null, false, router.query.q);
     }
-  }, []);
+  }, [router.query.q]);
 
   useEffect(() => {
     if (!users) {
@@ -45,9 +45,10 @@ export default function Search() {
     }
   }, [users, tweets]);
 
-  async function searchFunc(calledFromBtn, usr) {
-    if (search) {
-      const query = search.split(" ").join("+");
+  async function searchFunc(calledFromBtn, usr, queryText) {
+    if (search || queryText) {
+      const query =
+        search.split(" ").join("+") || queryText.split(" ").join("+");
       const link = `${backendURL}/api/search?q=${query}${
         usr || (!calledFromBtn && user) ? "&f=user" : ""
       }`;
