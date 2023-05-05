@@ -34,6 +34,7 @@ export default function UserProfile({ user }) {
   const [selected, setSelected] = useState("tweets");
   const [openLogin, setOpenLogin] = useState(false);
   const [openRegister, setOpenRegister] = useState(false);
+  const [conversation, setConversation] = useState(user.conversation);
 
   const { userInfo } = useSelector((state) => state.auth);
   const router = useRouter();
@@ -52,6 +53,7 @@ export default function UserProfile({ user }) {
     setFollowing(user.reqUserFollowing);
     setFollowers(user.followers);
     setSelected("tweets");
+    setConversation(user.conversation);
     getTweets();
   }, [router.asPath]);
 
@@ -126,6 +128,32 @@ export default function UserProfile({ user }) {
     if (data.success) {
       setLikes([...likes, ...data.tweets]);
       setRepliesPageDetails(data.pages);
+    }
+  }
+
+  async function handleConversation() {
+    if (userInfo) {
+      if (conversation) {
+        router.push("/messages");
+      } else {
+        const token = localStorage.getItem("token");
+
+        const data = await fetch(
+          `${backendURL}/api/user/${user.user.handle}/conversation`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        ).then((res) => res.json());
+
+        if (data.success) {
+          // call to notification
+
+          router.push("/messages");
+        }
+      }
     }
   }
 
@@ -222,7 +250,17 @@ export default function UserProfile({ user }) {
           className="bg-red-400 h-[133px] w-[133px] rounded-full absolute top-[182px] ml-5 border-4 border-black"
         ></img>
       </div>
-      <div className="px-4 pt-3 flex self-end h-[78px]">
+      <div className="px-4 pt-3 flex self-end h-[78px] gap-2">
+        {userInfo && user.user._id != userInfo._id ? (
+          <button
+            onClick={handleConversation}
+            className="px-4 h-9 rounded-full border border-secondary"
+          >
+            <img className="h-6 w-6" src="/email.svg"></img>
+          </button>
+        ) : (
+          <></>
+        )}
         {userInfo && user.user._id == userInfo._id ? (
           <button
             onClick={() => {
