@@ -75,7 +75,7 @@ export default function Conversation({ conversation, messageSentFunc }) {
 
   return (
     <>
-      {conversation ? (
+      {conversation.length > 1 ? (
         <div className="relative flex-grow flex flex-col max-w-[598px] max-h-screen border-r border-gray-700/75">
           <div
             style={{ backgroundColor: "rgba(0, 0, 0, 0.65)" }}

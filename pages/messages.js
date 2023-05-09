@@ -16,6 +16,8 @@ export default function Messages() {
   const [error, setError] = useState(false);
   const router = useRouter();
 
+  console.log(conversations);
+
   useEffect(() => {
     if (userInfo) {
       async function getConversations() {
