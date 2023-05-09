@@ -5,19 +5,19 @@ export default function MobileBottomBar() {
   const router = useRouter();
 
   return (
-    <div className="bg-black sticky px-4 py-2 bottom-0 border-t border-gray-700/75">
+    <div className="bg-black sticky px-4 py-3 bottom-0 border-t border-gray-700/75">
       <div className="flex">
         <div className="flex-grow flex justify-center flex-basis">
           <Link href={"/"}>
             <img
               src={router.asPath == "/" ? "/home-active.svg" : "/home.svg"}
-              className="w-8 h-8"
+              className="w-7 h-7"
             />
           </Link>
         </div>
         <div className="flex-grow flex justify-center flex-basis">
           <Link href={"/explore"}>
-            <img src="/hashtag.svg" alt="" className="w-8 h-8" />
+            <img src="/hashtag.svg" alt="" className="w-7 h-7" />
           </Link>
         </div>
         <div className="flex-grow flex justify-center flex-basis">
@@ -29,7 +29,7 @@ export default function MobileBottomBar() {
                   : "/bell.svg"
               }
               alt=""
-              className="w-8 h-8"
+              className="w-7 h-7"
             />
           </Link>
         </div>
@@ -41,7 +41,7 @@ export default function MobileBottomBar() {
                   ? "/email-active.svg"
                   : "/email.svg"
               }
-              className="w-8 h-8"
+              className="w-7 h-7"
             />
           </Link>
         </div>
