@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { BrowserView, MobileView } from "react-device-detect";
 import MobileBottomBar from "@/components/MobileBottomBar";
+import { useRouter } from "next/router";
 
 const backendURL = "http://localhost:3000";
 
@@ -13,30 +14,35 @@ export default function Bookmarks() {
   const [bookmarks, setBookmarks] = useState([]);
   const { userInfo } = useSelector((state) => state.auth);
   const [error, setError] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
-    async function getBookmarks() {
-      const token = localStorage.getItem("token");
+    if (userInfo) {
+      async function getBookmarks() {
+        const token = localStorage.getItem("token");
 
-      const data = await fetch(`${backendURL}/api/bookmark`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((res) => {
-          const data = res.json();
-
-          if (data.success) {
-            setBookmarks(data.bookmarks);
-          } else {
-            setError(true);
-          }
+        const data = await fetch(`${backendURL}/api/bookmark`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         })
-        .catch((err) => setError(true));
-    }
+          .then((res) => {
+            const data = res.json();
 
-    getBookmarks();
+            if (data.success) {
+              setBookmarks(data.bookmarks);
+            } else {
+              setError(true);
+            }
+          })
+          .catch((err) => setError(true));
+      }
+
+      getBookmarks();
+    } else {
+      router.push("/explore");
+    }
   }, []);
 
   return (

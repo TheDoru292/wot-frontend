@@ -45,8 +45,6 @@ export default function Explore() {
         .then((res) => res.json())
         .catch((err) => console.error(err));
 
-      console.log(tweets);
-
       if (tweets) {
         setPageDetails(tweets.pages);
         setTweets(tweets.tweets);

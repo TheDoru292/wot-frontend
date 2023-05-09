@@ -6,6 +6,7 @@ import { io } from "socket.io-client";
 import Message from "@/components/Message";
 import Send from "@/components/Icons/Send";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 const backendURL = `http://localhost:3000`;
 
@@ -25,31 +26,42 @@ export default function Conversation({ conversationId }) {
     const [messagePages, setMessagePages] = useState({});
     const [fetched, setFetched] = useState(false);
     const [messageContent, setMessageContent] = useState("");
+    const router = useRouter();
 
     const { userInfo } = useSelector((state) => state.auth);
 
     const textRef = useRef();
 
     useEffect(() => {
-      getMessages();
-      getUser();
+      if (userInfo) {
+        getMessages();
+        getUser();
 
-      const socket = io(backendURL);
+        const socket = io(backendURL);
 
-      socket.emit("join", conversationId);
+        socket.emit("join", conversationId);
 
-      socket.on("new-message", (data) => {
-        console.log("New messsage", data);
+        socket.on("new-message", (data) => {
+          console.log("New messsage", data);
 
-        setMessages((array) => [data, ...array]);
-      });
+          setMessages((array) => [data, ...array]);
+        });
+      }
     }, [conversationId]);
 
     useEffect(() => {
-      if (otherUser && messages) {
-        setFetched(true);
+      if (userInfo) {
+        if (otherUser && messages) {
+          setFetched(true);
+        }
       }
     }, [otherUser, messages]);
+
+    useEffect(() => {
+      if (!userInfo) {
+        router.push("/explore");
+      }
+    }, []);
 
     async function getUser() {
       const token = localStorage.getItem("token");

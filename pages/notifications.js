@@ -8,6 +8,7 @@ import { BrowserView, MobileView } from "react-device-detect";
 import MobileBottomBar from "@/components/MobileBottomBar";
 import MobileUserBar from "@/components/MobileUserBar";
 import Notification from "@/components/Notification";
+import { useRouter } from "next/router";
 
 const backendURL = "http://localhost:3000";
 
@@ -17,30 +18,35 @@ export default function Notifications() {
   const [openUserBar, setOpenUserBar] = useState(false);
   const [error, setError] = useState(false);
   const { userInfo } = useSelector((state) => state.auth);
+  const router = useRouter();
 
   useEffect(() => {
-    async function getNotifcations() {
-      const token = localStorage.getItem("token");
+    if (userInfo) {
+      async function getNotifcations() {
+        const token = localStorage.getItem("token");
 
-      const data = await fetch(
-        `${backendURL}/api/user/${userInfo.handle}/notifications`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-        .then((res) => {
-          const data = res.json();
+        const data = await fetch(
+          `${backendURL}/api/user/${userInfo.handle}/notifications`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+          .then((res) => {
+            const data = res.json();
 
-          setNotifications(data.notifications);
-          setFilteredNotifications(data.notifications);
-        })
-        .catch((err) => setError(true));
+            setNotifications(data.notifications);
+            setFilteredNotifications(data.notifications);
+          })
+          .catch((err) => setError(true));
+      }
+
+      getNotifcations();
+    } else {
+      router.push("/explore");
     }
-
-    getNotifcations();
   }, []);
 
   return (

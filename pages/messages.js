@@ -7,35 +7,41 @@ import MobileBottomBar from "@/components/MobileBottomBar";
 import { useSelector } from "react-redux";
 import ConversationTabComponent from "@/components/ConversationTabComponent";
 import Notification from "@/components/Notification";
+import { useRouter } from "next/router";
 
 export default function Messages() {
   const [conversation, setConversation] = useState([]);
   const [conversations, setConversations] = useState([]);
   const { userInfo } = useSelector((state) => state.auth);
   const [error, setError] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
-    async function getConversations() {
-      const token = localStorage.getItem("token");
+    if (userInfo) {
+      async function getConversations() {
+        const token = localStorage.getItem("token");
 
-      const data = await fetch(
-        `http://localhost:3000/api/user/${userInfo.handle}/conversation`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-        .then(async (res) => {
-          const data = await res.json();
+        const data = await fetch(
+          `http://localhost:3000/api/user/${userInfo.handle}/conversation`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+          .then(async (res) => {
+            const data = await res.json();
 
-          setConversations(data.conversations);
-        })
-        .catch((err) => setError(true));
+            setConversations(data.conversations);
+          })
+          .catch((err) => setError(true));
+      }
+
+      getConversations();
+    } else {
+      router.push("/explore");
     }
-
-    getConversations();
   }, []);
 
   function messageSent(message) {
