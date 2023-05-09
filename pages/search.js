@@ -12,6 +12,7 @@ import MobileTopBar from "@/components/MobileTopBar";
 import NotLoggedInModal from "@/components/NotLoggedInModal";
 import Login from "@/components/Login";
 import Register from "@/components/Register";
+import Notification from "@/components/Notification";
 
 const backendURL = `http://localhost:3000`;
 
@@ -23,6 +24,7 @@ export default function Search() {
   const [search, setSearch] = useState("");
   const [users, setUsers] = useState([]);
   const [tweets, setTweets] = useState([]);
+  const [error, setError] = useState(false);
 
   const { userInfo } = useSelector((state) => state.auth);
 
@@ -59,16 +61,17 @@ export default function Search() {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      }).then((res) => res.json());
+      })
+        .then((res) => {
+          const body = res.json();
 
-      console.log(body);
-      console.log(users);
-
-      if (user || (usr && calledFromBtn)) {
-        setUsers(body.users);
-      } else {
-        setTweets(body.tweets);
-      }
+          if (user || (usr && calledFromBtn)) {
+            setUsers(body.users);
+          } else {
+            setTweets(body.tweets);
+          }
+        })
+        .catch((err) => setError(true));
     }
   }
 
@@ -91,6 +94,7 @@ export default function Search() {
             onClick={() => {
               setTweet(true);
               setUser(false);
+              setError(false);
               searchFunc(true);
             }}
             className="w-full flex self-center justify-center"
@@ -117,6 +121,7 @@ export default function Search() {
             onClick={() => {
               setUser(true);
               setTweet(false);
+              setError(false);
               searchFunc(true, true);
             }}
             className="w-full flex self-center justify-center"
@@ -171,7 +176,7 @@ export default function Search() {
               </div>
               <div className="flex flex-grow w-full">
                 <div className="w-full">
-                  {user ? (
+                  {user && !error ? (
                     users.length == 0 && search != "" ? (
                       <p className="text-center font-bold">
                         Unfortunately, we didn't find any users with those
@@ -202,7 +207,7 @@ export default function Search() {
                   ) : (
                     <></>
                   )}
-                  {tweet ? (
+                  {tweet && !error ? (
                     tweets.length == 0 && search != "" ? (
                       <p className="text-center font-bold">
                         Unfortunatley, we didn't find any tweets with those
@@ -217,6 +222,11 @@ export default function Search() {
                         />
                       ))
                     )
+                  ) : (
+                    <></>
+                  )}
+                  {error ? (
+                    <Notification errorMessage="Failed to search." />
                   ) : (
                     <></>
                   )}
@@ -254,7 +264,7 @@ export default function Search() {
       <MobileView className="bg-black min-h-screen text-white flex flex-col max-w-screen">
         <MobileTopBar children={buttons} searchBar={searchBar} />
         <main className="flex-grow">
-          {user ? (
+          {user && !error ? (
             users.length == 0 && search != "" ? (
               <p className="text-center font-bold">
                 Unfortunately, we didn't find any users with those terms.
@@ -278,7 +288,7 @@ export default function Search() {
           ) : (
             <></>
           )}
-          {tweet ? (
+          {tweet && !error ? (
             tweets.length == 0 && search != "" ? (
               <p className="text-center font-bold">
                 Unfortunatley, we didn't find any tweets with those terms.
@@ -291,6 +301,7 @@ export default function Search() {
           ) : (
             <></>
           )}
+          {error ? <Notification errorMessage="Failed to search." /> : <></>}
         </main>
         {userInfo ? <MobileBottomBar /> : <></>}
         {!userInfo ? (

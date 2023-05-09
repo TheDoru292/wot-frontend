@@ -13,6 +13,7 @@ import Link from "next/link";
 import MobileBottomBar from "@/components/MobileBottomBar";
 import MobileTopBar from "@/components/MobileTopBar";
 import MobileUserBar from "@/components/MobileUserBar";
+import Notification from "@/components/Notification";
 
 const backendURL = "http://localhost:3000";
 
@@ -25,6 +26,7 @@ export default function Home() {
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState("forYou");
   const [openUserBar, setOpenUserBar] = useState(false);
+  const [error, setError] = useState(false);
   const router = useRouter();
 
   async function fetchTweets() {
@@ -38,10 +40,18 @@ export default function Home() {
           Authorization: `Bearer ${token}`,
         },
       }
-    ).then((res) => res.json());
+    )
+      .then(async (res) => {
+        const tweets = await res.json();
 
-    setPageDetails(tweets.pages);
-    setTweets(tweets.tweets);
+        if (tweets.success) {
+          setPageDetails(tweets.pages);
+          setTweets(tweets.tweets);
+        } else {
+          setError(true);
+        }
+      })
+      .catch((err) => setError(true));
   }
 
   async function showMoreTweets() {
@@ -56,10 +66,18 @@ export default function Home() {
             Authorization: `Bearer ${token}`,
           },
         }
-      ).then((res) => res.json());
+      )
+        .then(async (res) => {
+          const fetchedTweets = res.json();
 
-      setTweets([...tweets, ...fetchedTweets.tweets]);
-      setPageDetails(fetchedTweets.pages);
+          if (fetchedTweets.success) {
+            setTweets([...tweets, ...fetchedTweets.tweets]);
+            setPageDetails(fetchedTweets.pages);
+          } else {
+            setError(true);
+          }
+        })
+        .catch((err) => setError(true));
     } else {
       const token = localStorage.getItem("token");
 
@@ -73,10 +91,18 @@ export default function Home() {
             Authorization: `Bearer ${token}`,
           },
         }
-      ).then((res) => res.json());
+      )
+        .then(async (res) => {
+          const fetchedTweets = res.json();
 
-      setTweets([...tweets, ...fetchedTweets.tweets]);
-      setPageDetails(fetchedTweets.pages);
+          if (fetchedTweets.success) {
+            setTweets([...tweets, ...fetchedTweets.tweets]);
+            setPageDetails(fetchedTweets.pages);
+          } else {
+            setError(true);
+          }
+        })
+        .catch((err) => setError(true));
     }
   }
 
@@ -99,12 +125,18 @@ export default function Home() {
           Authorization: `Bearer ${token}`,
         },
       }
-    ).then((res) => res.json());
+    )
+      .then(async (res) => {
+        const fetchedTweets = res.json();
 
-    setTweets(fetchedTweets.tweets);
-    setPageDetails(fetchedTweets.pages);
-
-    console.log(fetchedTweets);
+        try {
+          setTweets(fetchedTweets.tweets);
+          setPageDetails(fetchedTweets.pages);
+        } catch {
+          setError(true);
+        }
+      })
+      .catch((err) => setError(true));
   }
 
   useEffect(() => {
@@ -204,6 +236,7 @@ export default function Home() {
                   <div
                     onClick={() => {
                       setSelected("forYou");
+                      setError(false);
                       setTweets([]);
                       fetchTweets();
                     }}
@@ -225,6 +258,7 @@ export default function Home() {
                       setSelected("following");
                       setTweets([]);
                       getFollowingTweets();
+                      setError(false);
                     }}
                     className="cursor-pointer text-secondary font-bold hover:bg-zinc-500/10 flex justify-center flex-grow flex-basis"
                   >
@@ -249,6 +283,13 @@ export default function Home() {
                 />
               );
             })}
+            {error ? (
+              <div className="mt-2">
+                <Notification errorMessage="Failed to fetch tweets" />
+              </div>
+            ) : (
+              <></>
+            )}
             {pageDetails.hasNextPage == true ? (
               <p
                 className="p-2 font-bold cursor-pointer hover:text-blue-300"
@@ -298,6 +339,13 @@ export default function Home() {
               />
             );
           })}
+          {error ? (
+            <div className="mt-2">
+              <Notification errorMessage="Failed to fetch tweets" />
+            </div>
+          ) : (
+            <></>
+          )}
           {pageDetails.hasNextPage ? (
             <p onClick={showMoreTweets} className="text-center py-2">
               Show more tweets

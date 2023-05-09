@@ -12,12 +12,17 @@ import MobileBottomBar from "@/components/MobileBottomBar";
 export default function Connect() {
   const { userInfo } = useSelector((state) => state.auth);
   const [users, setUsers] = useState([]);
+  const [connectError, setConnectError] = useState(false);
 
   useEffect(() => {
     async function getUsers() {
       const data = await getConnectUsers(userInfo.handle);
 
-      setUsers(data.users);
+      if (!data.error && data.success) {
+        setUsers(data.users);
+      } else {
+        setConnectError(true);
+      }
     }
 
     getUsers();
@@ -62,6 +67,13 @@ export default function Connect() {
                   />
                 );
               })}
+              {connectError ? (
+                <p className="px-4 font-bold text-red-400">
+                  Failed to fetch users.
+                </p>
+              ) : (
+                <></>
+              )}
             </div>
           </main>
           <RightSidebar />
@@ -99,6 +111,13 @@ export default function Connect() {
                 />
               );
             })}
+            {connectError ? (
+              <p className="px-4 font-bold text-red-400">
+                Failed to fetch users.
+              </p>
+            ) : (
+              <></>
+            )}
           </div>
         </main>
         <MobileBottomBar />

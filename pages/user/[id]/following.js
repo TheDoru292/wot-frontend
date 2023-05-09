@@ -29,6 +29,7 @@ export async function getServerSideProps({ params }) {
 export default function Following({ user }) {
   const [openLogin, setOpenLogin] = useState(false);
   const [openRegister, setOpenRegister] = useState(false);
+  const [error, setError] = useState(false);
   const [users, setUsers] = useState([]);
   const { userInfo } = useSelector((state) => state.auth);
 
@@ -36,7 +37,11 @@ export default function Following({ user }) {
     async function getUsers() {
       const data = await getUsersFollowing(user.user.handle);
 
-      setUsers(data.following);
+      if (!data.error && data.success) {
+        setUsers(data.following);
+      } else {
+        setError(true);
+      }
     }
 
     getUsers();
@@ -108,6 +113,13 @@ export default function Following({ user }) {
                   />
                 );
               })}
+              {error ? (
+                <p className="font-bold text-red-400 px-4">
+                  Failed to fetch users.
+                </p>
+              ) : (
+                <></>
+              )}
             </div>
           </main>
           <RightSidebar />

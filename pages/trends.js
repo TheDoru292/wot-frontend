@@ -8,16 +8,26 @@ import { BrowserView, MobileView } from "react-device-detect";
 import MobileBottomBar from "@/components/MobileBottomBar";
 import NotLoggedInModal from "@/components/NotLoggedInModal";
 import { useSelector } from "react-redux";
+import Notification from "@/components/Notification";
 
 export default function Trends() {
   const [tags, setTags] = useState([]);
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const { userInfo } = useSelector((state) => state.auth);
 
   useEffect(() => {
     async function getTags() {
       const data = await getTagsFromBackend();
 
-      setTags(data.tags);
+      if (data.success) {
+        setTags(data.tags);
+      }
+
+      if (data.error) {
+        setError(true);
+        setErrorMessage("Failed to get tags.");
+      }
     }
 
     getTags();
@@ -65,6 +75,7 @@ export default function Trends() {
                 );
               })}
             </div>
+            {error ? <Notification errorMessage={errorMessage} /> : <></>}
           </main>
           <RightSidebar />
         </div>
@@ -102,6 +113,7 @@ export default function Trends() {
               </Link>
             );
           })}
+          {error ? <Notification errorMessage={errorMessage} /> : <></>}
         </div>
         <MobileBottomBar />
       </MobileView>

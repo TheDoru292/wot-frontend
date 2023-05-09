@@ -81,10 +81,18 @@ export default function Conversation({ conversationId }) {
             Authorization: `Bearer ${token}`,
           },
         }
-      ).then((res) => res.json());
+      )
+        .then((res) => res.json())
+        .catch((err) => {
+          return { success: false };
+        });
 
-      setMessages(data.messages.docs);
-      setMessagePages(data.messages);
+      if (data.success) {
+        setMessages(data.messages.docs);
+        setMessagePages(data.messages);
+      } else {
+        setMessages({ error: true });
+      }
     }
 
     async function sendMessage() {
@@ -139,7 +147,7 @@ export default function Conversation({ conversationId }) {
             <></>
           )}
           <div className="flex overflow-auto flex-col-reverse py-2 px-4 gap-[5px] justify-items-bottom flex-grow">
-            {fetched ? (
+            {fetched && !messages.error ? (
               messages.map((message, i) => (
                 <Message
                   key={i}
@@ -151,7 +159,9 @@ export default function Conversation({ conversationId }) {
                 />
               ))
             ) : (
-              <></>
+              <p className="text-red-400 font-bold">
+                Failed to fetch messages.
+              </p>
             )}
           </div>
           <div className="px-4 pb-[4.5px] pt-2 border-t border-gray-700/75">

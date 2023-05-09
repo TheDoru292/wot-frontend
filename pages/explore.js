@@ -41,10 +41,16 @@ export default function Explore() {
             Authorization: token ? `Bearer ${token}` : null,
           },
         }
-      ).then((res) => res.json());
+      )
+        .then((res) => res.json())
+        .catch((err) => console.error(err));
 
-      setPageDetails(tweets.pages);
-      setTweets(tweets.tweets);
+      console.log(tweets);
+
+      if (tweets) {
+        setPageDetails(tweets.pages);
+        setTweets(tweets.tweets);
+      }
     }
 
     async function getTags() {

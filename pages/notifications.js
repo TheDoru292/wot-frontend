@@ -7,6 +7,7 @@ import { format, formatDistance } from "date-fns";
 import { BrowserView, MobileView } from "react-device-detect";
 import MobileBottomBar from "@/components/MobileBottomBar";
 import MobileUserBar from "@/components/MobileUserBar";
+import Notification from "@/components/Notification";
 
 const backendURL = "http://localhost:3000";
 
@@ -14,6 +15,7 @@ export default function Notifications() {
   const [notifications, setNotifications] = useState([]);
   const [filteredNotifications, setFilteredNotifications] = useState([]);
   const [openUserBar, setOpenUserBar] = useState(false);
+  const [error, setError] = useState(false);
   const { userInfo } = useSelector((state) => state.auth);
 
   useEffect(() => {
@@ -29,13 +31,13 @@ export default function Notifications() {
           },
         }
       )
-        .then((res) => res.json())
-        .catch((err) => console.log(err));
+        .then((res) => {
+          const data = res.json();
 
-      console.log(data);
-
-      setNotifications(data.notifications);
-      setFilteredNotifications(data.notifications);
+          setNotifications(data.notifications);
+          setFilteredNotifications(data.notifications);
+        })
+        .catch((err) => setError(true));
     }
 
     getNotifcations();
@@ -102,6 +104,11 @@ export default function Notifications() {
                 }
               })}
             </div>
+            {error ? (
+              <Notification errorMessage="Failed to fetch notifications." />
+            ) : (
+              <></>
+            )}
           </main>
           <RightSidebar />
         </div>
@@ -171,6 +178,11 @@ export default function Notifications() {
               );
             }
           })}
+          {error ? (
+            <Notification errorMessage="Failed to fetch notifications." />
+          ) : (
+            <></>
+          )}
         </main>
         <MobileBottomBar />
       </MobileView>

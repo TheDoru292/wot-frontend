@@ -12,6 +12,7 @@ const backendURL = "http://localhost:3000";
 export default function Bookmarks() {
   const [bookmarks, setBookmarks] = useState([]);
   const { userInfo } = useSelector((state) => state.auth);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     async function getBookmarks() {
@@ -23,12 +24,16 @@ export default function Bookmarks() {
           Authorization: `Bearer ${token}`,
         },
       })
-        .then((res) => res.json())
-        .catch((err) => console.log(err));
+        .then((res) => {
+          const data = res.json();
 
-      setBookmarks(data.bookmarks);
-
-      console.log(data);
+          if (data.success) {
+            setBookmarks(data.bookmarks);
+          } else {
+            setError(true);
+          }
+        })
+        .catch((err) => setError(true));
     }
 
     getBookmarks();
@@ -53,6 +58,13 @@ export default function Bookmarks() {
             {bookmarks.map((item) => {
               return <Tweet key={item._id} tweet={item.tweet} rest={item} />;
             })}
+            {error ? (
+              <p className="text-red-400 font-bold px-4">
+                Failed to fetch bookmarks
+              </p>
+            ) : (
+              <></>
+            )}
           </main>
           <RightSidebar />
         </div>
@@ -66,6 +78,13 @@ export default function Bookmarks() {
           {bookmarks.map((item) => {
             return <Tweet key={item._id} tweet={item.tweet} rest={item} />;
           })}
+          {error ? (
+            <p className="text-red-400 font-bold px-4">
+              Failed to fetch bookmarks
+            </p>
+          ) : (
+            <></>
+          )}
         </main>
         <MobileBottomBar />
       </MobileView>

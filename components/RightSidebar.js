@@ -1,31 +1,63 @@
-import { getRightSidebarTags, getRightSidebarUsers } from "@/lib/actions";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import Link from "next/link";
 import RsUser from "./RsUser";
 import { isMobile } from "react-device-detect";
+import Notification from "./Notification";
+
+const backendURL = "http://localhost:3000";
 
 export default function RightSidebar({ openCreateAccount }) {
   const [tags, setTags] = useState([]);
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
   const router = useRouter();
-  const { userInfo } = useSelector((state) => state.auth);
+  const { userInfo, userToken } = useSelector((state) => state.auth);
   const sidebar = useRef(null);
+
+  const [tagsError, setTagsError] = useState(false);
+  const [usersError, setUsersError] = useState(false);
 
   useEffect(() => {
     async function getTags() {
-      const data = await getRightSidebarTags();
+      const data = await fetch(`${backendURL}/api/tag/popular`, {
+        method: "GET",
+      })
+        .then(async (res) => {
+          const data = await res.json();
 
-      setTags(data.tags);
+          console.log("yey");
+
+          console.log(data);
+
+          if (data.success) {
+            console.log("ah");
+            setTags(data.tags);
+          }
+        })
+        .catch((err) => setTagsError(true));
     }
 
     async function getUsers() {
-      const data = await getRightSidebarUsers(userInfo.handle);
+      const data = await fetch(
+        `${backendURL}/api/user/${userInfo.handle}/connect`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+            Limit: true,
+          },
+        }
+      )
+        .then(async (res) => {
+          const data = await res.json();
 
-      console.log(data);
-      setUsers(data.users);
+          if (data.success) {
+            setUsers(data.users);
+          }
+        })
+        .catch((err) => setUsersError(true));
     }
 
     if (userInfo) {
@@ -101,11 +133,24 @@ export default function RightSidebar({ openCreateAccount }) {
                   </Link>
                 );
               })}
-              <Link href="/trends">
-                <p className="px-4 py-2 pb-4 rounded-b-xl text-sky-400 hover:bg-zinc-800/50">
-                  Show more
-                </p>
-              </Link>
+              {tags.length == 3 ? (
+                <Link href="/trends">
+                  <p className="px-4 py-2 pb-4 rounded-b-xl text-sky-400 hover:bg-zinc-800/50">
+                    Show more
+                  </p>
+                </Link>
+              ) : (
+                <></>
+              )}
+              {tagsError ? (
+                <div className="px-4 pb-3">
+                  <p className="font-bold text-red-400">
+                    Failed to fetch tags.
+                  </p>
+                </div>
+              ) : (
+                <></>
+              )}
             </div>
           </>
         )}
@@ -117,11 +162,22 @@ export default function RightSidebar({ openCreateAccount }) {
             {users.map((item) => {
               return <RsUser key={item.user._id} user={item} />;
             })}
-            <Link href="/connect_people">
-              <p className="px-4 py-2 pb-4 rounded-b-xl text-sky-400 hover:bg-zinc-800/50">
-                Show more
-              </p>
-            </Link>
+            {users.length == 3 ? (
+              <Link href="/connect_people">
+                <p className="px-4 py-2 pb-4 rounded-b-xl text-sky-400 hover:bg-zinc-800/50">
+                  Show more
+                </p>
+              </Link>
+            ) : (
+              <></>
+            )}
+            {usersError ? (
+              <div className="px-4 pb-3 font-bold text-red-400">
+                Failed to fetch users.
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
         )}
         {userInfo ? (

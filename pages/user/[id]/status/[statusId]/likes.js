@@ -19,6 +19,7 @@ export async function getServerSideProps({ context }) {
 }
 
 export default function Likes() {
+  const [error, setError] = useState(false);
   const [users, setUsers] = useState([]);
   const router = useRouter();
 
@@ -33,13 +34,15 @@ export default function Likes() {
     async function getUsers() {
       const data = await getTweetLikes(statusId);
 
-      setUsers(data.likes);
+      if (!data.error && data.success) {
+        setUsers(data.retweets);
+      } else {
+        setError(true);
+      }
     }
 
     getUsers();
   }, []);
-
-  console.log(router.query);
 
   return (
     <>
@@ -77,6 +80,11 @@ export default function Likes() {
               />
             );
           })}
+          {error ? (
+            <p className="font-bold text-red-400 px-4">Failed to fetch users</p>
+          ) : (
+            <></>
+          )}
         </div>
         <MobileBottomBar />
       </MobileView>

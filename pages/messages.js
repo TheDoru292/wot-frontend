@@ -6,11 +6,13 @@ import { MobileView, BrowserView, isMobile } from "react-device-detect";
 import MobileBottomBar from "@/components/MobileBottomBar";
 import { useSelector } from "react-redux";
 import ConversationTabComponent from "@/components/ConversationTabComponent";
+import Notification from "@/components/Notification";
 
 export default function Messages() {
-  const [conversation, setConversation] = useState();
+  const [conversation, setConversation] = useState([]);
   const [conversations, setConversations] = useState([]);
   const { userInfo } = useSelector((state) => state.auth);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     async function getConversations() {
@@ -24,10 +26,13 @@ export default function Messages() {
             Authorization: `Bearer ${token}`,
           },
         }
-      ).then((res) => res.json());
+      )
+        .then(async (res) => {
+          const data = await res.json();
 
-      setConversations(data.conversations);
-      console.log(data);
+          setConversations(data.conversations);
+        })
+        .catch((err) => setError(true));
     }
 
     getConversations();
@@ -108,6 +113,11 @@ export default function Messages() {
               setActiveItem={setActive}
             />
           ))}
+          {error ? (
+            <Notification errorMessage="Failed to fetch conversations" />
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </div>
