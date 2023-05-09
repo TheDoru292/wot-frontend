@@ -17,7 +17,7 @@ import NotLoggedInModal from "@/components/NotLoggedInModal";
 import Login from "@/components/Login";
 import Register from "@/components/Register";
 
-const backendURL = "http://localhost:3000";
+const backendURL = "https://wot-backend-production.up.railway.app";
 
 export default function UserProfile({ user }) {
   const [tweets, setTweets] = useState([]);
@@ -701,11 +701,14 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  const user = await fetch(`http://localhost:3000/api/user/${params.id}`, {
-    headers: {
-      authorization: `Bearer ${process.env.TOKEN}`,
-    },
-  }).then((res) => res.json());
+  const user = await fetch(
+    `https://wot-backend-production.up.railway.app/api/user/${params.id}`,
+    {
+      headers: {
+        authorization: `Bearer ${process.env.TOKEN}`,
+      },
+    }
+  ).then((res) => res.json());
 
   return {
     props: {

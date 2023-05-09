@@ -31,7 +31,7 @@ import NotLoggedInModal from "@/components/NotLoggedInModal";
 import Login from "@/components/Login";
 import Register from "@/components/Register";
 
-const backendURL = "http://localhost:3000";
+const backendURL = "https://wot-backend-production.up.railway.app";
 
 export async function getServerSideProps(context) {
   const auth = `Bearer ${context.req.cookies["token"]}`;

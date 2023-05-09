@@ -15,7 +15,7 @@ import MobileBottomBar from "@/components/MobileBottomBar";
 import MobileUserBar from "@/components/MobileUserBar";
 import NotLoggedInModal from "@/components/NotLoggedInModal";
 
-const backendURL = "http://localhost:3000";
+const backendURL = "https://wot-backend-production.up.railway.app";
 
 export default function Explore() {
   const { userInfo } = useSelector((state) => state.auth);

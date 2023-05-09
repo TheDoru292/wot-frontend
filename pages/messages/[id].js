@@ -8,7 +8,7 @@ import Send from "@/components/Icons/Send";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-const backendURL = `http://localhost:3000`;
+const backendURL = `https://wot-backend-production.up.railway.app`;
 
 export async function getServerSideProps(context) {
   return {

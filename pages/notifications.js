@@ -10,7 +10,7 @@ import MobileUserBar from "@/components/MobileUserBar";
 import Notification from "@/components/Notification";
 import { useRouter } from "next/router";
 
-const backendURL = "http://localhost:3000";
+const backendURL = "https://wot-backend-production.up.railway.app";
 
 export default function Notifications() {
   const [notifications, setNotifications] = useState([]);
