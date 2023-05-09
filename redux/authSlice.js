@@ -34,6 +34,7 @@ const authSlice = createSlice({
       state.success = true;
       state.userInfo = payload.user;
       state.userToken = payload.token;
+      document.cookie = `token=${payload.token}`;
     },
     [registerUser.rejected]: (state, { payload }) => {
       state.loading = false;
@@ -47,6 +48,7 @@ const authSlice = createSlice({
       state.loading = false;
       state.userInfo = payload.user;
       state.userToken = payload.token;
+      document.cookie = `token=${payload.token}`;
     },
     [userLogin.rejected]: (state, { payload }) => {
       state.loading = false;

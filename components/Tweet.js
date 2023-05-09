@@ -72,7 +72,7 @@ export default function Tweet({
   }
 
   function copyLink() {
-    const link = `http://localhost:3002/user/${tweet.user.handle}/status/${tweet._id}`;
+    const link = `https://wot-frontend.onrender.com/user/${tweet.user.handle}/status/${tweet._id}`;
 
     navigator.clipboard.writeText(link);
 

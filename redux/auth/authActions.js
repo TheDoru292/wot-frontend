@@ -13,6 +13,7 @@ export const registerUser = createAsyncThunk(
         method: "POST",
         credentials: "include",
         headers: {
+          "Access-Control-Allow-Credentials": "true",
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
