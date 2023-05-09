@@ -708,7 +708,9 @@ export async function getStaticProps({ params }) {
         authorization: `Bearer ${process.env.TOKEN}`,
       },
     }
-  ).then((res) => res.json());
+  )
+    .then((res) => res.json())
+    .catch((err) => console.log(err));
 
   return {
     props: {
