@@ -23,6 +23,8 @@ export default function Conversation({ conversation, messageSentFunc }) {
       socket.emit("join", conversation.id);
 
       socket.on("new-message", (data) => {
+        console.log(data);
+
         setMessages((array) => [data, ...array]);
 
         messageSentFunc(data);
