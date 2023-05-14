@@ -710,20 +710,11 @@ export default function UserProfile({ user }) {
   );
 }
 
-export async function getStaticPaths() {
-  const paths = await getAllProfileUrl();
-
-  return {
-    paths,
-    fallback: true,
-  };
-}
-
-export async function getServerSideProps({ params }) {
+export async function getServerSideProps(context) {
   const auth = `Bearer ${context.req.cookies["token"]}`;
 
   const user = await fetch(
-    `https://wot-backend-production.up.railway.app/api/user/${params.id}`,
+    `https://wot-backend-production.up.railway.app/api/user/${context.params.id}`,
     {
       headers: {
         Authorization: auth,
@@ -733,10 +724,20 @@ export async function getServerSideProps({ params }) {
     .then((res) => res.json())
     .catch((err) => console.log(err));
 
-  return {
-    props: {
-      user,
-      fallback: true,
-    },
-  };
+  if (user.user) {
+    return {
+      props: {
+        user,
+        fallback: true,
+      },
+    };
+  } else {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/404",
+      },
+      props: {},
+    };
+  }
 }
