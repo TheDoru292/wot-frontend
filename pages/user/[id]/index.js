@@ -719,12 +719,14 @@ export async function getStaticPaths() {
   };
 }
 
-export async function getStaticProps({ params }) {
+export async function getServerSideProps({ params }) {
+  const auth = `Bearer ${context.req.cookies["token"]}`;
+
   const user = await fetch(
     `https://wot-backend-production.up.railway.app/api/user/${params.id}`,
     {
       headers: {
-        authorization: `Bearer ${process.env.TOKEN}`,
+        Authorization: auth,
       },
     }
   )
@@ -736,6 +738,5 @@ export async function getStaticProps({ params }) {
       user,
       fallback: true,
     },
-    revalidate: 10,
   };
 }
