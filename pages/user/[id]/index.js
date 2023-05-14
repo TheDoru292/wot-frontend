@@ -427,7 +427,7 @@ export default function UserProfile({ user }) {
                       boxShadow: "0 0 0 50vmax rgba(91, 112, 131, 0.4)",
                       transform: "translate(-50%, -50%)",
                     }}
-                    className="p-7 w-[320px] max-h-[280px] h-full rounded-2xl absolute z-20 left-1/2 top-1/2 flex flex flex-col gap-6 bg-black text-white"
+                    className="p-7 w-[320px] max-h-[280px] h-full rounded-2xl absolute z-20 left-1/2 top-1/2 flex flex-col gap-6 bg-black text-white"
                   >
                     <div>
                       <h2 className="font-bold text-lg">
@@ -718,18 +718,21 @@ export async function getStaticPaths() {
   };
 }
 
-export async function getStaticProps({ params }) {
+export async function getServerSideProps({ params }) {
+  const auth = `Bearer ${context.req.cookies["token"]}`;
+
   const user = await fetch(`http://localhost:3000/api/user/${params.id}`, {
     headers: {
-      authorization: `Bearer ${process.env.TOKEN}`,
+      Authorization: auth,
     },
-  }).then((res) => res.json());
+  })
+    .then((res) => res.json())
+    .catch((err) => console.log(err));
 
   return {
     props: {
       user,
       fallback: true,
     },
-    revalidate: 10,
   };
 }
