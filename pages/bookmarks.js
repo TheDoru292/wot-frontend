@@ -27,8 +27,8 @@ export default function Bookmarks() {
             Authorization: `Bearer ${token}`,
           },
         })
-          .then((res) => {
-            const data = res.json();
+          .then(async (res) => {
+            const data = await res.json();
 
             if (data.success) {
               setBookmarks(data.bookmarks);
@@ -64,6 +64,11 @@ export default function Bookmarks() {
             {bookmarks.map((item) => {
               return <Tweet key={item._id} tweet={item.tweet} rest={item} />;
             })}
+            {!error & (bookmarks.length == 0) ? (
+              <p className="px-4">You don't have any tweets bookmarked!</p>
+            ) : (
+              <></>
+            )}
             {error ? (
               <p className="text-red-400 font-bold px-4">
                 Failed to fetch bookmarks

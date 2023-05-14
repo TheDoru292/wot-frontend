@@ -34,8 +34,8 @@ export default function Notifications() {
             },
           }
         )
-          .then((res) => {
-            const data = res.json();
+          .then(async (res) => {
+            const data = await res.json();
 
             setNotifications(data.notifications);
             setFilteredNotifications(data.notifications);
