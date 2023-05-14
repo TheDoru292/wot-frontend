@@ -41,6 +41,7 @@ export default function UserProfile({ user }) {
 
   useEffect(() => {
     getTweets();
+    console.log(user);
   }, []);
 
   useEffect(() => {
