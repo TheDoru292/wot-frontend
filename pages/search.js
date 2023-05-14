@@ -230,9 +230,9 @@ export default function Search() {
                   ) : (
                     <></>
                   )} */}
-                  At the current moment, search is disabled due to MongoDB
-                  serverless instances not supporting Atlas Search Indexes. This
-                  may change in the future.
+                  At the current moment, search is disabled due to self-hosted
+                  MongoDB instances not supporting Atlas Search Indexes. This
+                  will get fixed in the future.
                 </div>
               </div>
             </main>
