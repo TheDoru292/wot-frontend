@@ -729,7 +729,7 @@ export async function getStaticProps({ params }) {
     props: {
       user,
       fallback: true,
-      revalidate: 10,
     },
+    revalidate: 10,
   };
 }
