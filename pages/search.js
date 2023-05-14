@@ -30,50 +30,50 @@ export default function Search() {
 
   const router = useRouter();
 
-  useEffect(() => {
-    if (router.query.q) {
-      setSearch(router.query.q);
-      searchFunc(null, false, router.query.q);
-    }
-  }, [router.query.q]);
+  // useEffect(() => {
+  //   if (router.query.q) {
+  //     setSearch(router.query.q);
+  //     searchFunc(null, false, router.query.q);
+  //   }
+  // }, [router.query.q]);
 
-  useEffect(() => {
-    if (!users) {
-      setUsers([]);
-    }
+  // useEffect(() => {
+  //   if (!users) {
+  //     setUsers([]);
+  //   }
 
-    if (!tweets) {
-      setTweets([]);
-    }
-  }, [users, tweets]);
+  //   if (!tweets) {
+  //     setTweets([]);
+  //   }
+  // }, [users, tweets]);
 
-  async function searchFunc(calledFromBtn, usr, queryText) {
-    if (search || queryText) {
-      const query =
-        search.split(" ").join("+") || queryText.split(" ").join("+");
-      const link = `${backendURL}/api/search?q=${query}${
-        usr || (!calledFromBtn && user) ? "&f=user" : ""
-      }`;
-      const token = localStorage.getItem("token");
+  // async function searchFunc(calledFromBtn, usr, queryText) {
+  //   if (search || queryText) {
+  //     const query =
+  //       search.split(" ").join("+") || queryText.split(" ").join("+");
+  //     const link = `${backendURL}/api/search?q=${query}${
+  //       usr || (!calledFromBtn && user) ? "&f=user" : ""
+  //     }`;
+  //     const token = localStorage.getItem("token");
 
-      const body = await fetch(link, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((res) => {
-          const body = res.json();
+  //     const body = await fetch(link, {
+  //       method: "GET",
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     })
+  //       .then((res) => {
+  //         const body = res.json();
 
-          if (user || (usr && calledFromBtn)) {
-            setUsers(body.users);
-          } else {
-            setTweets(body.tweets);
-          }
-        })
-        .catch((err) => setError(true));
-    }
-  }
+  //         if (user || (usr && calledFromBtn)) {
+  //           setUsers(body.users);
+  //         } else {
+  //           setTweets(body.tweets);
+  //         }
+  //       })
+  //       .catch((err) => setError(true));
+  //   }
+  // }
 
   const buttons = (
     <div className="flex">
@@ -95,7 +95,7 @@ export default function Search() {
               setTweet(true);
               setUser(false);
               setError(false);
-              searchFunc(true);
+              // searchFunc(true);
             }}
             className="w-full flex self-center justify-center"
           >
@@ -122,7 +122,7 @@ export default function Search() {
               setUser(true);
               setTweet(false);
               setError(false);
-              searchFunc(true, true);
+              // searchFunc(true, true);
             }}
             className="w-full flex self-center justify-center"
           >
@@ -144,7 +144,7 @@ export default function Search() {
       onChange={(e) => setSearch(e.target.value)}
       onKeyDown={(e) => {
         if (e.key == "Enter") {
-          searchFunc();
+          // searchFunc();
         }
       }}
       className={
@@ -176,7 +176,7 @@ export default function Search() {
               </div>
               <div className="flex flex-grow w-full">
                 <div className="w-full">
-                  {user && !error ? (
+                  {/* {user && !error ? (
                     users.length == 0 && search != "" ? (
                       <p className="text-center font-bold">
                         Unfortunately, we didn't find any users with those
@@ -229,7 +229,10 @@ export default function Search() {
                     <Notification errorMessage="Failed to search." />
                   ) : (
                     <></>
-                  )}
+                  )} */}
+                  At the current moment, search is disabled due to MongoDB
+                  serverless instances not supporting Atlas Search Indexes. This
+                  may change in the future.
                 </div>
               </div>
             </main>
@@ -264,7 +267,7 @@ export default function Search() {
       <MobileView className="bg-black min-h-screen text-white flex flex-col max-w-screen">
         <MobileTopBar children={buttons} searchBar={searchBar} />
         <main className="flex-grow">
-          {user && !error ? (
+          {/* {user && !error ? (
             users.length == 0 && search != "" ? (
               <p className="text-center font-bold">
                 Unfortunately, we didn't find any users with those terms.
@@ -300,8 +303,11 @@ export default function Search() {
             )
           ) : (
             <></>
-          )}
-          {error ? <Notification errorMessage="Failed to search." /> : <></>}
+          )} */}
+          At the current moment, search is disabled due to MongoDB serverless
+          instances not supporting Atlas Search Indexes. This may change in the
+          future.
+          {/* {error ? <Notification errorMessage="Failed to search." /> : <></>} */}
         </main>
         {userInfo ? <MobileBottomBar /> : <></>}
         {!userInfo ? (
