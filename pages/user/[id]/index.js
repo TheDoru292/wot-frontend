@@ -734,6 +734,7 @@ export async function getStaticProps({ params }) {
   return {
     props: {
       user,
+      fallback: true,
     },
   };
 }
