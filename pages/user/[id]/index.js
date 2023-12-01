@@ -17,7 +17,7 @@ import NotLoggedInModal from "@/components/NotLoggedInModal";
 import Login from "@/components/Login";
 import Register from "@/components/Register";
 
-const backendURL = "https://wot-backend-production.up.railway.app";
+const backendURL = "https://wot-backend.onrender.com";
 
 export default function UserProfile({ user }) {
   const [tweets, setTweets] = useState([]);
@@ -714,7 +714,7 @@ export async function getServerSideProps(context) {
   const auth = `Bearer ${context.req.cookies["token"]}`;
 
   const user = await fetch(
-    `https://wot-backend-production.up.railway.app/api/user/${context.params.id}`,
+    `https://wot-backend.onrender.com//api/user/${context.params.id}`,
     {
       headers: {
         Authorization: auth,

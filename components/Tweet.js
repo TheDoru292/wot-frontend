@@ -20,7 +20,7 @@ import Checkmark from "./Icons/Checkmark";
 import { isMobile } from "react-device-detect";
 import NotificationModal from "./NotificationModal";
 
-const backendURL = "https://wot-backend-production.up.railway.app";
+const backendURL = "https://wot-backend.onrender.com";
 
 export default function Tweet({
   tweet,

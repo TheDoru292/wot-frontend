@@ -9,7 +9,7 @@ import Share from "./Icons/Share";
 import { deleteComment } from "@/lib/actions";
 import { useSelector } from "react-redux";
 
-const backendURL = "https://wot-backend-production.up.railway.app";
+const backendURL = "https://wot-backend.onrender.com";
 
 export default function CommentComp({ comment }) {
   const [liked, setLiked] = useState(comment.like);

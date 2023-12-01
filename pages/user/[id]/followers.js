@@ -14,7 +14,7 @@ import Register from "@/components/Register";
 
 export async function getServerSideProps({ params }) {
   const user = await fetch(
-    `https://wot-backend-production.up.railway.app/api/user/${params.id}`,
+    `https://wot-backend.onrender.com/api/user/${params.id}`,
     {
       headers: {
         authorization: `Bearer ${process.env.TOKEN}`,

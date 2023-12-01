@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 import Send from "./Icons/Send";
 import Message from "./Message";
 
-const backendURL = `https://wot-backend-production.up.railway.app`;
+const backendURL = `https://wot-backend.onrender.com`;
 
 export default function Conversation({ conversation, messageSentFunc }) {
   const [messages, setMessages] = useState([]);

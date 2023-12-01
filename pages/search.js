@@ -14,7 +14,7 @@ import Login from "@/components/Login";
 import Register from "@/components/Register";
 import Notification from "@/components/Notification";
 
-const backendURL = `https://wot-backend-production.up.railway.app`;
+const backendURL = `https://wot-backend.onrender.com`;
 
 export default function Search() {
   const [openLogin, setOpenLogin] = useState(false);

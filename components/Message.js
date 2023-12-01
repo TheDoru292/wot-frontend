@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import Copy from "./Icons/Copy";
 import { isMobile } from "react-device-detect";
 
-const backendURL = "https://wot-backend-production.up.railway.app";
+const backendURL = "https://wot-backend.onrender.com";
 
 export default function Message({ message, userInfo, conversationId }) {
   const [deleted, setDeleted] = useState(message.deleted);

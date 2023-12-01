@@ -15,7 +15,7 @@ import MobileTopBar from "@/components/MobileTopBar";
 import MobileUserBar from "@/components/MobileUserBar";
 import Notification from "@/components/Notification";
 
-const backendURL = "https://wot-backend-production.up.railway.app";
+const backendURL = "https://wot-backend.onrender.com";
 
 export default function Home() {
   const { userInfo, userToken } = useSelector((state) => state.auth);

@@ -22,7 +22,7 @@ export default function Messages() {
         const token = localStorage.getItem("token");
 
         const data = await fetch(
-          `https://wot-backend-production.up.railway.app/api/user/${userInfo.handle}/conversation`,
+          `https://wot-backend.onrender.com/api/user/${userInfo.handle}/conversation`,
           {
             method: "GET",
             headers: {

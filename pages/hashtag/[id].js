@@ -31,7 +31,7 @@ export default function Hashtag({ params }) {
       const token = localStorage.getItem("token");
 
       const data = await fetch(
-        `https://wot-backend-production.up.railway.app/api/tag/tweets/${params}`,
+        `https://wot-backend.onrender.com/api/tag/tweets/${params}`,
         {
           method: "GET",
           headers: {
