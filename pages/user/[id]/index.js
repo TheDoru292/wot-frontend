@@ -714,7 +714,7 @@ export async function getServerSideProps(context) {
   const auth = `Bearer ${context.req.cookies["token"]}`;
 
   const user = await fetch(
-    `https://wot-backend.onrender.com//api/user/${context.params.id}`,
+    `https://wot-backend.onrender.com/api/user/${context.params.id}`,
     {
       headers: {
         Authorization: auth,
