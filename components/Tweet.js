@@ -1,4 +1,4 @@
-import { format, formatDistance } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
@@ -380,19 +380,26 @@ export default function Tweet({
             </Link>
             <span className="text-secondary">·</span>
             <p className="text-secondary flex-grow truncate">
-              {format(new Date(tweet.posted_on), "MMM dd")}
+              {formatDistanceToNow(new Date(tweet.posted_on), {
+                includeSeconds: true,
+                addSuffix: true,
+              })}
             </p>
-            <Image
-              alt="menu"
-              src="/dots-horizontal.svg"
-              className="cursor-pointer"
-              onClick={(e) => {
-                setOpenTweetMenu(true);
-                e.stopPropagation();
-              }}
-              width={19}
-              height={19}
-            />
+            {userInfo ? (
+              <Image
+                alt="menu"
+                src="/dots-horizontal.svg"
+                className="cursor-pointer"
+                onClick={(e) => {
+                  setOpenTweetMenu(true);
+                  e.stopPropagation();
+                }}
+                width={19}
+                height={19}
+              />
+            ) : (
+              <></>
+            )}
           </div>
           {tweet.content != "" ? (
             <>
