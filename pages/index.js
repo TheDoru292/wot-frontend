@@ -127,11 +127,13 @@ export default function Home() {
       }
     )
       .then(async (res) => {
-        const fetchedTweets = res.json();
+        const fetchedTweets = await res.json();
 
         try {
-          setTweets(fetchedTweets.tweets);
-          setPageDetails(fetchedTweets.pages);
+          if (fetchedTweets.tweets) {
+            setTweets(fetchedTweets.tweets);
+            setPageDetails(fetchedTweets.pages);
+          }
         } catch {
           setError(true);
         }
