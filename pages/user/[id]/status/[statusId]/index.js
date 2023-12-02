@@ -30,6 +30,7 @@ import MobileBottomBar from "@/components/MobileBottomBar";
 import NotLoggedInModal from "@/components/NotLoggedInModal";
 import Login from "@/components/Login";
 import Register from "@/components/Register";
+import Checkmark from "@/components/Icons/Checkmark";
 
 const backendURL = "http://localhost:3000";
 
@@ -240,14 +241,21 @@ export default function Status({ notFound, tweet }) {
         />
         <div className="flex flex-grow">
           <div className="flex flex-col self-center">
-            <Link
-              className="hover:underline"
-              href={`/user/${tweet.tweet.user.handle}/`}
-            >
-              <p className="font-bold leading-4">
-                {tweet?.tweet.user.username}
-              </p>
-            </Link>
+            <div className="flex gap-1 items-center">
+              <Link
+                className="hover:underline"
+                href={`/user/${tweet.tweet.user.handle}/`}
+              >
+                <p className="font-bold leading-4">
+                  {tweet?.tweet.user.username}
+                </p>
+              </Link>
+              {tweet.tweet.user.verifiedCheckmark ? (
+                <Checkmark className="w-[17px] h-[17px] self-center mt-[3px]" />
+              ) : (
+                <></>
+              )}
+            </div>
             <Link href={`/user/${tweet.tweet.user.handle}`}>
               <p className="text-secondary">@{tweet?.tweet.user.handle}</p>
             </Link>
