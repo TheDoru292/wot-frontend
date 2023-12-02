@@ -59,7 +59,7 @@ export default function Hashtag({ params }) {
       <BrowserView>
         <div className="bg-black flex min-h-screen text-gray-200">
           <LeftSidebar />
-          <main className="flex max-w-[575px] flex-grow flex-col border-r border-gray-700/75">
+          <main className="flex max-w-[600px] flex-grow flex-col border-r border-gray-700/75">
             <div
               style={{ backgroundColor: "rgba(0, 0, 0, .70)" }}
               className="py-1 pl-4 sticky top-0 flex flex-col backdrop-blur-[2px] z-[3]"

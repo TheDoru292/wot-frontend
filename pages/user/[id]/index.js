@@ -461,7 +461,7 @@ export default function UserProfile({ user }) {
               ) : (
                 <></>
               )}
-              <main className="flex max-w-[575px] flex-grow flex-col border-r border-gray-700/75">
+              <main className="flex max-w-[600px] flex-grow flex-col border-r border-gray-700/75">
                 <main className="flex flex-grow flex-col">
                   {profileHeader}
                   {profileDetails}

@@ -220,7 +220,7 @@ export default function Home() {
           ) : (
             <></>
           )}
-          <main className="flex max-w-[575px] flex-grow flex-col border-r border-gray-700/75">
+          <main className="flex max-w-[600px] flex-grow flex-col border-r border-gray-700/75">
             <div
               style={{ backgroundColor: "rgba(0,0,0,0.65)", zIndex: "100" }}
               className="sticky top-[0.1px] flex flex-col backdrop-blur-md border-b border-gray-700/75"

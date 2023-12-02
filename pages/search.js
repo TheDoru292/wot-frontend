@@ -164,7 +164,7 @@ export default function Search() {
           </Head>
           <div className="flex">
             <LeftSidebar />
-            <main className="flex max-w-[575px] flex-grow flex-col border-r border-gray-700/75">
+            <main className="flex max-w-[600px] flex-grow flex-col border-r border-gray-700/75">
               <div
                 style={{ backgroundColor: "rgba(0, 0, 0, .70)" }}
                 className="py-1 sticky top-0 flex flex-col backdrop-blur-md z-[3]"

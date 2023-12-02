@@ -488,7 +488,7 @@ export default function Status({ notFound, tweet }) {
           ) : (
             <></>
           )}
-          <main className="flex max-w-[575px] flex-grow flex-col border-r border-gray-700/75">
+          <main className="flex max-w-[600px] flex-grow flex-col border-r border-gray-700/75">
             <div
               style={{ backgroundColor: "rgba(0,0,0,0.65)", zIndex: "100" }}
               className="sticky top-[0.1px] backdrop-blur-xl px-4 py-1 h-[52px] flex gap-6 mb-3"
