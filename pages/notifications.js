@@ -8,7 +8,9 @@ import { BrowserView, MobileView } from "react-device-detect";
 import MobileBottomBar from "@/components/MobileBottomBar";
 import MobileUserBar from "@/components/MobileUserBar";
 import Notification from "@/components/Notification";
+import Checkmark from "@/components/Icons/Checkmark";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 const backendURL = "http://localhost:3000";
 
@@ -78,23 +80,38 @@ export default function Notifications() {
                       className="px-3 py-3 hover:bg-white/5 border-b border-stone-700/75"
                     >
                       <div className="flex gap-3">
-                        <img
-                          src={item.user.profile_picture_url
-                            .replace(`"`, "")
-                            .replace(",", "")}
-                          alt=""
-                          className="w-12 h-12 rounded-full"
-                        />
+                        <Link href={`/user/${item.user.handle}`}>
+                          <img
+                            src={item.user.profile_picture_url
+                              .replace(`"`, "")
+                              .replace(",", "")}
+                            alt=""
+                            className="w-12 h-12 rounded-full"
+                          />
+                        </Link>
                         <div className="flex flex-col">
-                          <p className="font-bold">
-                            <span className="hover:underline cursor-pointer">
-                              {item.user.username}
-                            </span>{" "}
-                            <span className="cursor-pointer text-secondary font-normal">
-                              @{item.user.handle} {" · "}
-                            </span>
+                          <p className="flex gap-1 font-bold">
+                            <div className="flex gap-0.5 items-center">
+                              <Link href={`/user/${item.user.handle}`}>
+                                <span className="hover:underline cursor-pointer">
+                                  {item.user.username}
+                                </span>
+                              </Link>
+                              {item.user.verifiedCheckmark ? (
+                                <Checkmark className="w-[17px] h-[17px] self-center" />
+                              ) : (
+                                <></>
+                              )}
+                            </div>
+                            <Link href={`/user/${item.user.handle}`}>
+                              <span className="cursor-pointer text-secondary font-normal">
+                                @{item.user.handle} {"·"}
+                              </span>
+                            </Link>
                             <span className="text-secondary font-normal">
-                              {formatDistance(new Date(item.date), new Date())}
+                              {formatDistance(new Date(item.date), new Date(), {
+                                addSuffix: true,
+                              })}
                             </span>
                           </p>
                           <p>
