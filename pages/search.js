@@ -62,8 +62,8 @@ export default function Search() {
           Authorization: `Bearer ${token}`,
         },
       })
-        .then((res) => {
-          const body = res.json();
+        .then(async (res) => {
+          const body = await res.json();
 
           if (user || (usr && calledFromBtn)) {
             setUsers(body.users);
