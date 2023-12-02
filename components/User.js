@@ -3,12 +3,16 @@ import Link from "next/link";
 import Checkmark from "./Icons/Checkmark";
 import { useState } from "react";
 import { isMobile } from "react-device-detect";
+import { useRouter } from "next/router";
 
 export default function User({ user, following, currentUser, notLoggedIn }) {
   const [followingHover, setFollowingHover] = useState(false);
   const [isFollowing, setIsFollowing] = useState(following);
+  const router = useRouter();
 
-  async function handleFollow() {
+  async function handleFollow(e) {
+    e.stopPropagation();
+
     if (isFollowing == true) {
       const data = await unfollow(user.handle);
 
@@ -24,70 +28,76 @@ export default function User({ user, following, currentUser, notLoggedIn }) {
     }
   }
 
+  function redirectToUserProfile(e, handle) {
+    e.preventDefault();
+    router.push(`/user/${handle}`);
+  }
+
   return (
-    <Link href={`/user/${user.handle}`}>
-      <div className="flex px-4 py-4 pb-3 gap-3 hover:bg-white/5">
-        <img
-          src={user.profile_picture_url.replace(`"`, "").replace(",", "")}
-          alt="profile pic"
-          className="w-12 h-12 rounded-full"
-        />
-        <div className="flex w-full flex-col">
-          <div className="flex">
-            <div className="flex-grow">
-              <div className="flex gap-1 items-center">
-                <p
-                  className={
-                    isMobile
-                      ? "font-bold max-w-[120px] truncate leading-5"
-                      : "font-bold truncate leading-5"
-                  }
-                >
-                  {user.username}
-                </p>
-                {user.verifiedCheckmark ? (
-                  <Checkmark className="w-[17px] h-[17px] self-center mt-[3px]" />
-                ) : (
-                  <></>
-                )}
-              </div>
+    <div
+      onClick={(e) => redirectToUserProfile(e, user.handle)}
+      className="flex px-4 py-4 pb-3 gap-3 hover:bg-white/5"
+    >
+      <img
+        src={user.profile_picture_url.replace(`"`, "").replace(",", "")}
+        alt="profile pic"
+        className="w-12 h-12 rounded-full"
+      />
+      <div className="flex w-full flex-col">
+        <div className="flex">
+          <div className="flex-grow">
+            <div className="flex gap-1 items-center">
               <p
                 className={
                   isMobile
-                    ? "text-secondary max-w-[120px] truncate"
-                    : "text-secondary truncate"
+                    ? "font-bold max-w-[120px] truncate leading-5"
+                    : "font-bold truncate leading-5"
                 }
               >
-                @{user.handle}
+                {user.username}
               </p>
+              {user.verifiedCheckmark ? (
+                <Checkmark className="w-[17px] h-[17px] self-center mt-[3px]" />
+              ) : (
+                <></>
+              )}
             </div>
-            {notLoggedIn || currentUser.handle == user.handle ? (
-              <></>
-            ) : isFollowing == true ? (
-              <button
-                onMouseEnter={() => setFollowingHover(true)}
-                onMouseLeave={() => setFollowingHover(false)}
-                onClick={handleFollow}
-                className="font-bold h-[32px] hover:text-red-600 hover:bg-red-700/20 hover:border-red-600/40 my-1 px-4 rounded-full border border-secondary"
-              >
-                {followingHover == true ? (
-                  <span>Unfollow</span>
-                ) : (
-                  <span>Following</span>
-                )}
-              </button>
-            ) : (
-              <button
-                onClick={handleFollow}
-                className="bg-white text-black font-bold my-1 px-4 rounded-full h-[32px]"
-              >
-                Follow
-              </button>
-            )}
+            <p
+              className={
+                isMobile
+                  ? "text-secondary max-w-[120px] truncate"
+                  : "text-secondary truncate"
+              }
+            >
+              @{user.handle}
+            </p>
           </div>
-          <p className="text-gray-200">{user.bio}</p>
+          {notLoggedIn || currentUser.handle == user.handle ? (
+            <></>
+          ) : isFollowing == true ? (
+            <button
+              onMouseEnter={() => setFollowingHover(true)}
+              onMouseLeave={() => setFollowingHover(false)}
+              onClick={(e) => handleFollow(e)}
+              className="font-bold h-[32px] hover:text-red-600 hover:bg-red-700/20 hover:border-red-600/40 my-1 px-4 rounded-full border border-secondary"
+            >
+              {followingHover == true ? (
+                <span>Unfollow</span>
+              ) : (
+                <span>Following</span>
+              )}
+            </button>
+          ) : (
+            <button
+              onClick={(e) => handleFollow(e)}
+              className="bg-white text-black font-bold my-1 px-4 rounded-full h-[32px]"
+            >
+              Follow
+            </button>
+          )}
         </div>
+        <p className="text-gray-200">{user.bio}</p>
       </div>
-    </Link>
+    </div>
   );
 }
