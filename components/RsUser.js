@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { follow, unfollow } from "@/lib/actions";
 import Link from "next/link";
+import Checkmark from "./Icons/Checkmark";
 
 export default function RsUser({ user }) {
   const [following, setFollowing] = useState(user.following);
@@ -31,7 +32,14 @@ export default function RsUser({ user }) {
           alt=""
         />
         <div className="flex-grow">
-          <p>{user.user.username}</p>
+          <div className="flex gap-1">
+            <p>{user.user.username}</p>
+            {user.user.verifiedCheckmark ? (
+              <Checkmark className="w-[17px] h-[17px] self-center" />
+            ) : (
+              <></>
+            )}
+          </div>
           <p className="text-secondary">@{user.user.handle}</p>
         </div>
         {following == false ? (

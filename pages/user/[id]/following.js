@@ -58,7 +58,7 @@ export default function Following({ user }) {
       <BrowserView>
         <div className="bg-black flex min-h-screen text-gray-200">
           <LeftSidebar />
-          <main className="flex max-w-[575px] flex-grow flex-col border-r border-gray-700/75">
+          <main className="flex max-w-[600px] flex-grow flex-col border-r border-gray-700/75">
             <div
               style={{ backgroundColor: "rgba(0,0,0,0.65)" }}
               className="w-full sticky flex flex-col top-[0.1px] backdrop-blur-xl pt-1 flex gap-1 border-b border-gray-700/75"

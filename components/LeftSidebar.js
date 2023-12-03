@@ -78,7 +78,7 @@ export default function LeftSidebar() {
   if (userInfo) {
     return (
       <>
-        <div className="overflow-y-auto sticky top-0 h-screen justify-end flex w-[405px] border-r border-gray-700/75 max-[1300px]:w-[86px]">
+        <div className="overflow-y-auto sticky top-0 h-screen justify-end flex basis-1 flex-grow border-r border-gray-700/75 max-[1300px]:w-[86px]">
           <div className="flex gap-5 flex-col w-[245px] max-[1300px]:w-full">
             <div className="flex w-full justify-start pt-3 px-[6px] max-[1300px]:p-0 max-[1300px]:pt-3 max-[1300px]:justify-center">
               <div className="self-center self-end bg-red-400 w-10 h-10 rounded-full"></div>
@@ -182,10 +182,10 @@ export default function LeftSidebar() {
     );
   } else {
     return (
-      <div className="overflow-y-auto sticky top-0 h-screen justify-end flex w-[405px] border-r border-gray-700/75 max-[1300px]:w-[86px]">
+      <div className="overflow-y-auto sticky top-0 h-screen justify-end flex basis-1 flex-grow border-r border-gray-700/75 max-[1300px]:w-[86px]">
         <div className="flex gap-5 flex-col w-[245px] max-[1300px]:w-full">
           <div className="flex w-full justify-start pt-3 px-[6px] max-[1300px]:p-0 max-[1300px]:pt-3 max-[1300px]:justify-center">
-            <div className="self-center self-end bg-red-400 w-10 h-10 rounded-full"></div>
+            <div className="self-end bg-red-400 w-10 h-10 rounded-full"></div>
           </div>
           <div className="flex flex-grow items-start flex-col gap-2 mr-3 max-[1300px]:items-center max-[1300px]:mx-1">
             {list.map((item) => {

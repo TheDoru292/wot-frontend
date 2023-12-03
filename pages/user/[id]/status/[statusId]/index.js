@@ -30,6 +30,7 @@ import MobileBottomBar from "@/components/MobileBottomBar";
 import NotLoggedInModal from "@/components/NotLoggedInModal";
 import Login from "@/components/Login";
 import Register from "@/components/Register";
+import Checkmark from "@/components/Icons/Checkmark";
 
 const backendURL = "https://wot-backend.onrender.com";
 
@@ -236,14 +237,21 @@ export default function Status({ notFound, tweet }) {
         />
         <div className="flex flex-grow">
           <div className="flex flex-col self-center">
-            <Link
-              className="hover:underline"
-              href={`/user/${tweet.tweet.user.handle}/`}
-            >
-              <p className="font-bold leading-4">
-                {tweet?.tweet.user.username}
-              </p>
-            </Link>
+            <div className="flex gap-1 items-center">
+              <Link
+                className="hover:underline"
+                href={`/user/${tweet.tweet.user.handle}/`}
+              >
+                <p className="font-bold leading-4">
+                  {tweet?.tweet.user.username}
+                </p>
+              </Link>
+              {tweet.tweet.user.verifiedCheckmark ? (
+                <Checkmark className="w-[17px] h-[17px] self-center mt-[3px]" />
+              ) : (
+                <></>
+              )}
+            </div>
             <Link href={`/user/${tweet.tweet.user.handle}`}>
               <p className="text-secondary">@{tweet?.tweet.user.handle}</p>
             </Link>
@@ -476,7 +484,7 @@ export default function Status({ notFound, tweet }) {
           ) : (
             <></>
           )}
-          <main className="flex max-w-[575px] flex-grow flex-col border-r border-gray-700/75">
+          <main className="flex max-w-[600px] flex-grow flex-col border-r border-gray-700/75">
             <div
               style={{ backgroundColor: "rgba(0,0,0,0.65)", zIndex: "100" }}
               className="sticky top-[0.1px] backdrop-blur-xl px-4 py-1 h-[52px] flex gap-6 mb-3"

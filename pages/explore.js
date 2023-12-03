@@ -52,9 +52,17 @@ export default function Explore() {
     }
 
     async function getTags() {
-      const data = await getRightSidebarTags();
+      const data = await fetch(`${backendURL}/api/tag/popular`, {
+        method: "GET",
+      })
+        .then(async (res) => {
+          const data = await res.json();
 
-      setTags(data.tags);
+          if (data.success) {
+            setTags(data.tags);
+          }
+        })
+        .catch((err) => setTagsError(true));
     }
 
     fetchTweets();
@@ -91,7 +99,8 @@ export default function Explore() {
           </Head>
           <div className="flex">
             <LeftSidebar />
-            <main className="flex max-w-[575px] flex-grow flex-col border-r border-gray-700/75">
+            {/* max-w-[600px] */}
+            <main className="flex flex-grow max-w-[600px] flex-col border-r border-gray-700/75">
               <div className="sticky top-0 backdrop-blur-md z-[999] px-4 py-[5px]">
                 <input
                   type="text"
@@ -112,9 +121,12 @@ export default function Explore() {
                 <h2 className="px-4 pt-2 pb-2 text-lg font-bold">
                   Trending tags
                 </h2>
-                {tags.map((item) => {
+                {tags.map((item, i) => {
                   return (
-                    <Link href={`/hashtag/${item._id.replace("#", "")}`}>
+                    <Link
+                      key={i}
+                      href={`/hashtag/${item._id.replace("#", "")}`}
+                    >
                       <div
                         className="px-4 py-3 hover:bg-zinc-800/50"
                         key={item._id}
@@ -201,9 +213,9 @@ export default function Explore() {
         <main className="flex-grow">
           <div className="flex flex-col border-b pt-2 border-gray-700/75">
             <h2 className="px-4 text-lg font-bold">Trending tags</h2>
-            {tags.map((item) => {
+            {tags.map((item, i) => {
               return (
-                <Link href={`/hashtag/${item._id.replace("#", "")}`}>
+                <Link key={i} href={`/hashtag/${item._id.replace("#", "")}`}>
                   <div
                     className="px-4 py-3 hover:bg-zinc-800/50"
                     key={item._id}
@@ -259,10 +271,12 @@ export default function Explore() {
         {!userInfo ? (
           <div className="sticky px-4 py-2 bottom-0 flex flex-col w-full bg-blue-500">
             <div className="flex pb-2 flex-col flex-grow">
-              <p className="font-bold">Find out what's happening right now.</p>
+              <p className="font-bold">
+                Find out what&apos;s happening right now.
+              </p>
               <p>
-                With twitter you can quickly find out what's happening right
-                now.
+                With twitter you can quickly find out what&apos;s happening
+                right now.
               </p>
             </div>
             <div className="flex">

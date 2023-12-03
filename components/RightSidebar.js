@@ -60,7 +60,7 @@ export default function RightSidebar({ openCreateAccount }) {
     }
 
     getTags();
-  }, []);
+  }, [userInfo, userToken]);
 
   window.onscroll = () => {
     if (!isMobile) {
@@ -85,7 +85,8 @@ export default function RightSidebar({ openCreateAccount }) {
   };
 
   return (
-    <div className="hidden lg:flex overflow-hidden min-h-screen w-[540px] pt-2">
+    // w-[540px]
+    <div className="flex-grow basis-1 hidden lg:flex overflow-hidden min-h-screen pt-2">
       <div ref={sidebar} className="flex gap-4 flex-col ml-6 w-[360px]">
         {router.pathname == "/explore" || router.pathname == "/search" ? (
           <></>
@@ -179,7 +180,7 @@ export default function RightSidebar({ openCreateAccount }) {
           <></>
         ) : (
           <div className="flex flex-col p-3 rounded-xl border border-gray-700/75">
-            <p className="font-bold text-lg">Let's use Wot!</p>
+            <p className="font-bold text-lg">Let&apos;s use Wot!</p>
             <p className="text-secondary pb-4">
               Sign up today to start using Wot!
             </p>
