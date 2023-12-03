@@ -47,7 +47,7 @@ export default function Trends() {
             <link rel="icon" href="/favicon.ico" />
           </Head>
           <LeftSidebar />
-          <main className="flex max-w-[575px] flex-grow flex-col border-r border-gray-700/75">
+          <main className="flex max-w-[600px] flex-grow flex-col border-r border-gray-700/75">
             <div className="sticky top-[0.1px] flex px-4 py-1 gap-6 backdrop-blur-md">
               <Link href="/" className="flex">
                 <div className="flex px-2 rounded-full hover:bg-stone-900">

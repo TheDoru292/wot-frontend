@@ -238,12 +238,16 @@ export default function UserProfile({ user }) {
       }
     >
       <div className="bg-stone-700 w-full h-[200px]">
-        <img
-          style={{ objectFit: "cover", objectPosition: "25% 25%" }}
-          src={user.user.cover_url}
-          alt="cover"
-          className="w-full h-full overflow-hidden"
-        />
+        {user.user.cover_url ? (
+          <img
+            style={{ objectFit: "cover", objectPosition: "25% 25%" }}
+            src={user.user.cover_url}
+            alt="cover"
+            className="w-full h-full overflow-hidden"
+          />
+        ) : (
+          <></>
+        )}
       </div>
       <div>
         <img

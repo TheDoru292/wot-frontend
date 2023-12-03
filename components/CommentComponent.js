@@ -8,6 +8,7 @@ import Comment from "./Icons/Comment";
 import Share from "./Icons/Share";
 import { deleteComment } from "@/lib/actions";
 import { useSelector } from "react-redux";
+import Checkmark from "./Icons/Checkmark";
 
 const backendURL = "https://wot-backend.onrender.com";
 
@@ -106,13 +107,18 @@ export default function CommentComp({ comment }) {
             />
           </Link>
           <div className="w-full flex flex-col">
-            <div className="flex gap-1">
+            <div className="flex items-center gap-1">
               <Link
                 href={`/user/${comment.comment.user.handle}`}
                 className="hover:underline"
               >
                 <p className="font-bold">{comment.comment.user.username}</p>
               </Link>
+              {comment.comment.user.verifiedCheckmark ? (
+                <Checkmark className="w-[17px] h-[17px] self-center mt-[3px]" />
+              ) : (
+                <></>
+              )}
               <Link href={`/user/${comment.comment.user.handle}`}>
                 <p className="text-secondary">@{comment.comment.user.handle}</p>
               </Link>
