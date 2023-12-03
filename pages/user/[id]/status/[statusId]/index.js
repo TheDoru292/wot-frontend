@@ -32,7 +32,7 @@ import Login from "@/components/Login";
 import Register from "@/components/Register";
 import Checkmark from "@/components/Icons/Checkmark";
 
-const backendURL = "http://localhost:3000";
+const backendURL = "https://wot-backend.onrender.com";
 
 export async function getServerSideProps(context) {
   const auth = `Bearer ${context.req.cookies["token"]}`;

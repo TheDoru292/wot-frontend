@@ -6,7 +6,7 @@ import RsUser from "./RsUser";
 import { isMobile } from "react-device-detect";
 import Notification from "./Notification";
 
-const backendURL = "http://localhost:3000";
+const backendURL = "https://wot-backend.onrender.com";
 
 export default function RightSidebar({ openCreateAccount }) {
   const [tags, setTags] = useState([]);

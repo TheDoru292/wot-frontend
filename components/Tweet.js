@@ -20,7 +20,7 @@ import Checkmark from "./Icons/Checkmark";
 import { isMobile } from "react-device-detect";
 import NotificationModal from "./NotificationModal";
 
-const backendURL = "http://localhost:3000";
+const backendURL = "https://wot-backend.onrender.com";
 
 export default function Tweet({
   tweet,
@@ -72,7 +72,7 @@ export default function Tweet({
   }
 
   function copyLink() {
-    const link = `http://localhost:3002/user/${tweet.user.handle}/status/${tweet._id}`;
+    const link = `https://wot-frontend.onrender.com/user/${tweet.user.handle}/status/${tweet._id}`;
 
     navigator.clipboard.writeText(link);
 

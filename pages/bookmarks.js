@@ -8,7 +8,7 @@ import { BrowserView, MobileView } from "react-device-detect";
 import MobileBottomBar from "@/components/MobileBottomBar";
 import { useRouter } from "next/router";
 
-const backendURL = "http://localhost:3000";
+const backendURL = "https://wot-backend.onrender.com";
 
 export default function Bookmarks() {
   const [bookmarks, setBookmarks] = useState([]);

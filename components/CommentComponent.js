@@ -10,7 +10,7 @@ import { deleteComment } from "@/lib/actions";
 import { useSelector } from "react-redux";
 import Checkmark from "./Icons/Checkmark";
 
-const backendURL = "http://localhost:3000";
+const backendURL = "https://wot-backend.onrender.com";
 
 export default function CommentComp({ comment }) {
   const [liked, setLiked] = useState(comment.like);

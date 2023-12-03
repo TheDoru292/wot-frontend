@@ -17,7 +17,7 @@ import NotLoggedInModal from "@/components/NotLoggedInModal";
 import Login from "@/components/Login";
 import Register from "@/components/Register";
 
-const backendURL = "http://localhost:3000";
+const backendURL = "https://wot-backend.onrender.com";
 
 export default function UserProfile({ user }) {
   const [tweets, setTweets] = useState([]);
@@ -41,6 +41,7 @@ export default function UserProfile({ user }) {
 
   useEffect(() => {
     getTweets();
+    console.log(user);
   }, []);
 
   useEffect(() => {
@@ -431,7 +432,7 @@ export default function UserProfile({ user }) {
                       boxShadow: "0 0 0 50vmax rgba(91, 112, 131, 0.4)",
                       transform: "translate(-50%, -50%)",
                     }}
-                    className="p-7 w-[320px] max-h-[280px] h-full rounded-2xl absolute z-20 left-1/2 top-1/2 flex flex-col gap-6 bg-black text-white"
+                    className="p-7 w-[320px] max-h-[280px] h-full rounded-2xl absolute z-20 left-1/2 top-1/2 flex flex flex-col gap-6 bg-black text-white"
                   >
                     <div>
                       <h2 className="font-bold text-lg">
@@ -461,7 +462,7 @@ export default function UserProfile({ user }) {
               ) : (
                 <></>
               )}
-              <main className="flex max-w-[600px] flex-grow flex-col border-r border-gray-700/75">
+              <main className="flex max-w-[575px] flex-grow flex-col border-r border-gray-700/75">
                 <main className="flex flex-grow flex-col">
                   {profileHeader}
                   {profileDetails}
@@ -717,7 +718,7 @@ export async function getServerSideProps(context) {
   const auth = `Bearer ${context.req.cookies["token"]}`;
 
   const user = await fetch(
-    `http://localhost:3000/api/user/${context.params.id}`,
+    `https://wot-backend.onrender.com/api/user/${context.params.id}`,
     {
       headers: {
         Authorization: auth,

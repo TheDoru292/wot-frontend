@@ -15,7 +15,7 @@ import MobileTopBar from "@/components/MobileTopBar";
 import MobileUserBar from "@/components/MobileUserBar";
 import Notification from "@/components/Notification";
 
-const backendURL = "http://localhost:3000";
+const backendURL = "https://wot-backend.onrender.com";
 
 export default function Home() {
   const { userInfo, userToken } = useSelector((state) => state.auth);

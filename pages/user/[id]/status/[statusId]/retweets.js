@@ -8,8 +8,6 @@ import Link from "next/link";
 import User from "@/components/User";
 import { useSelector } from "react-redux";
 
-const backendURL = "http://localhost:3002";
-
 export async function getServerSideProps({ context }) {
   return {
     props: {

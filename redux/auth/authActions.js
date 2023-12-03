@@ -1,6 +1,6 @@
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
 
-const backendURL = "http://localhost:3000";
+const backendURL = "https://wot-backend.onrender.com";
 
 export const registerUser = createAsyncThunk(
   "auth/register",
@@ -13,6 +13,7 @@ export const registerUser = createAsyncThunk(
         method: "POST",
         credentials: "include",
         headers: {
+          "Access-Control-Allow-Credentials": "true",
           "Content-Type": "application/json",
         },
         body: JSON.stringify({

@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 import Send from "./Icons/Send";
 import Message from "./Message";
 
-const backendURL = `http://localhost:3000`;
+const backendURL = `https://wot-backend.onrender.com`;
 
 export default function Conversation({ conversation, messageSentFunc }) {
   const [messages, setMessages] = useState([]);
@@ -23,6 +23,8 @@ export default function Conversation({ conversation, messageSentFunc }) {
       socket.emit("join", conversation.id);
 
       socket.on("new-message", (data) => {
+        console.log(data);
+
         setMessages((array) => [data, ...array]);
 
         messageSentFunc(data);

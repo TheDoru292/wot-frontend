@@ -13,11 +13,14 @@ import Login from "@/components/Login";
 import Register from "@/components/Register";
 
 export async function getServerSideProps({ params }) {
-  const user = await fetch(`http://localhost:3000/api/user/${params.id}`, {
-    headers: {
-      authorization: `Bearer ${process.env.TOKEN}`,
-    },
-  }).then((res) => res.json());
+  const user = await fetch(
+    `https://wot-backend.onrender.com/api/user/${params.id}`,
+    {
+      headers: {
+        authorization: `Bearer ${process.env.TOKEN}`,
+      },
+    }
+  ).then((res) => res.json());
 
   return {
     props: {

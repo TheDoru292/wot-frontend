@@ -12,7 +12,7 @@ import Checkmark from "@/components/Icons/Checkmark";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
-const backendURL = "http://localhost:3000";
+const backendURL = "https://wot-backend.onrender.com";
 
 export default function Notifications() {
   const [notifications, setNotifications] = useState([]);
