@@ -42,8 +42,6 @@ export default function Conversation({ conversationId }) {
         socket.emit("join", conversationId);
 
         socket.on("new-message", (data) => {
-          console.log("New messsage", data);
-
           setMessages((array) => [data, ...array]);
         });
       }

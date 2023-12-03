@@ -59,7 +59,6 @@ const authSlice = createSlice({
       state.error = null;
     },
     [editState.fulfilled]: (state, { payload }) => {
-      console.log("a");
       state.loading = false;
       state.success = true;
       state.userInfo = payload.user;

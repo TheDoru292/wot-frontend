@@ -201,8 +201,6 @@ export default function Follower({ user }) {
         </div>
         <div className="flex flex-grow flex-col">
           {users.map((item) => {
-            console.log(item.following);
-
             return (
               <User
                 key={item._id}

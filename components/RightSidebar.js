@@ -27,12 +27,7 @@ export default function RightSidebar({ openCreateAccount }) {
         .then(async (res) => {
           const data = await res.json();
 
-          console.log("yey");
-
-          console.log(data);
-
           if (data.success) {
-            console.log("ah");
             setTags(data.tags);
           }
         })

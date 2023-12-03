@@ -50,13 +50,10 @@ export const userLogin = createAsyncThunk(
         body: JSON.stringify({ handle, password }),
       }).then((res) => res.json());
 
-      console.log(data);
-
       localStorage.setItem("token", data.token);
       // localStorage.setItem("id", data.user._id);
       return data;
     } catch (err) {
-      console.log(err);
       if (err.success == false && err.status) {
         return rejectWithValue(err.status);
       } else {
@@ -95,7 +92,6 @@ export const editState = createAsyncThunk(
 
       return data;
     } catch (err) {
-      console.log(err);
       if (err.success == false && err.status) {
         return rejectWithValue(err.status);
       } else {

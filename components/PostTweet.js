@@ -22,8 +22,6 @@ export default function PostTweet({
       const { data } = await gf.gif(gifId);
 
       setGif(data);
-
-      console.log(gif);
     }
   }
 

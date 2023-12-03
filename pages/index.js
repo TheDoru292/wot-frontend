@@ -209,8 +209,6 @@ export default function Home() {
               onClick={(id) => {
                 setGifId(id);
 
-                console.log(id);
-
                 setGifMenu(false);
               }}
               close={() => setGifMenu(false)}

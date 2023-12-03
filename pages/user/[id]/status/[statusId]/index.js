@@ -100,8 +100,6 @@ export default function Status({ notFound, tweet }) {
         }
       ).then((res) => res.json());
 
-      console.log(data);
-
       setReplies(data.comments);
     }
 
@@ -161,8 +159,6 @@ export default function Status({ notFound, tweet }) {
       }
     }
   }
-
-  console.log(replies);
 
   async function replyA() {
     const data = await reply(tweet.tweet._id, replyMessage);
