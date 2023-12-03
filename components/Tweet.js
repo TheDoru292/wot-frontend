@@ -119,7 +119,7 @@ export default function Tweet({
       if (data.success && data.status == "Tweet liked.") {
         setLiked(true);
         setLikes((count) => count + 1);
-      } else if (data.success && data.status == "Removed like from tweet.") {
+      } else if (data.success == "Removed like from tweet.") {
         setLiked(false);
         setLikes((count) => count - 1);
       } else {
