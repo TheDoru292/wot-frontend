@@ -270,7 +270,7 @@ export default function Status({ notFound, tweet }) {
       </div>
       {tweet.tweet.content != "" ? (
         <div className="flex flex-col gap-1">
-          <pre
+          <p
             style={{
               fontFamily: `ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"`,
             }}
@@ -292,7 +292,7 @@ export default function Status({ notFound, tweet }) {
                 );
               }
             })}
-          </pre>
+          </p>
           {tweet.tweet.giphyUrl ? (
             <div className="mt-2 relative">
               <p className="absolute bottom-0 mb-2 ml-2 px-1 rounded-md font-bold bg-black w-min-content h-min-content">
