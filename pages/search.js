@@ -95,7 +95,7 @@ export default function Search() {
               setTweet(true);
               setUser(false);
               setError(false);
-              // searchFunc(true);
+              searchFunc(true);
             }}
             className="w-full flex self-center justify-center"
           >
@@ -122,7 +122,7 @@ export default function Search() {
               setUser(true);
               setTweet(false);
               setError(false);
-              // searchFunc(true, true);
+              searchFunc(true, true);
             }}
             className="w-full flex self-center justify-center"
           >
@@ -144,7 +144,7 @@ export default function Search() {
       onChange={(e) => setSearch(e.target.value)}
       onKeyDown={(e) => {
         if (e.key == "Enter") {
-          // searchFunc();
+          searchFunc();
         }
       }}
       className={
